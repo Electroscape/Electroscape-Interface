@@ -1,5 +1,15 @@
 web_stb_override
 
+## Running it on RPi
+To make a new Pi running the latest version of Electroscape-Interface.
+- Login to your Pi or SSH
+- 'cd ~'
+- 'mdir Electroscape-Interface'
+- 'git init'
+- 'git clone <web page>'
+- './init_script'
+Change Room and relay names from configuration in 'config.json' 
+
 ## installation
 Since flask can defenitely get issues like the latter one 
 use a Venv
