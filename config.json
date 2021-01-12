@@ -1,5 +1,5 @@
 {
-  "Room_name": "Hofman Test",
+  "Room_name": "hamburg Test",
   "Relays are Name, Active High, Auto, Hidden, BrainNo (Physical stuff is Indexed from 1)": "",
   "Relays": [
     ["Keypad", true, true, false, 1],
