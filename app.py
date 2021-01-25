@@ -170,6 +170,13 @@ def updater():
 def heartbeat_pulse():
     while True:
         socketio.emit('heartbeat_pulse', namespace='/test')
+        '''
+        if stb.error:
+            socketio.emit('serial_update', {'lines': ["STB ERROR"]}, namespace='/test', broadcast=True)
+        else:
+            socketio.emit('serial_update', {'lines': ["NO ERROR"]}, namespace='/test', broadcast=True)
+            stb.error = False
+        '''
         socketio.sleep(1)
 
 

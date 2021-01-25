@@ -124,9 +124,10 @@ class STB:
         self.serial_updates = []
         self.settings, self.relays, self.brains = self.__load_stb()
         self.GPIO = self.__gpio_init()
-        self.pcf_read, self.pcf_write = self.__pcf_init()
+        self.__pcf_init()
         self.user = False
         self.admin_mode = False
+        self.error = False
         self.update_stb()
         print("stb init done")
 
@@ -168,9 +169,29 @@ class STB:
         return settings, relays, brains
 
     def __pcf_init(self):
-        pcf_read = PCF8574(1, 0x38)
-        pcf_write = PCF8574(1, 0x3f)
-        return pcf_read, pcf_write
+        self.pcf_read = PCF8574(1, 0x38)
+        self.pcf_write = PCF8574(1, 0x3f)
+        # since the creating the instances does fail silently let's check
+        for port in range(8):
+            self.__read_pfc(port)
+            try:
+                self.pcf_write.port[port]
+            except IOError:
+                self.error = "Error with write PCF"
+
+    def __write_pcf(self, port, value):
+        try:
+            self.pcf_write.port[port] = value
+        except IOError:
+            self.error = "Error with write PCF"
+
+    def __read_pfc(self, port):
+        ret = self.relays[port].status
+        try:
+            ret = bool(self.pcf_read.port[port])
+        except IOError:
+            self.error = "Error with write PCF"
+        return ret
 
     def __gpio_init(self):
         try:
@@ -210,7 +231,7 @@ class STB:
             status = not relay.status
         print("setting relay {} to status {}".format(part_index, status))
         relay.set_status(status)
-        self.pcf_write.port[relay.index] = relay.status
+        self.__write_pcf(relay.index, relay.status)
         self.__log_action("User {} has flipped {} status {} to {}".format(
             self.user, relay.name, not status, status))
         # takes the cake for the unsexiest variable
@@ -289,7 +310,7 @@ class STB:
         for relay_no, relay in enumerate(self.relays):
             # auto = true, manual = false
             if relay.auto:
-                new_status = bool(self.pcf_read.port[relay_no])
+                new_status = self.__read_pfc(relay_no)
                 if new_status != relay.status:
                     relay.set_status(new_status)
                     relay_msg = "Relay {} has been switched to {} by the brain ".format(relay.name, relay.status)
@@ -298,7 +319,7 @@ class STB:
                     else:
                         cmd_socket.transmit(relay_msg)
                     self.updates.insert(0, [relay_no, relay.status_frontend, relay.btn_clr_frontend])
-                self.pcf_write.port[relay_no] = new_status
+                self.__write_pcf(relay_no, new_status)
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
         ser_lines = serial_socket.read_buffer()
