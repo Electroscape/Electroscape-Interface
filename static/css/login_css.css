@@ -1,7 +1,7 @@
 .group {
   display: flex;
   align-items: center;
-  width: 50%;
+  width: 60%;
 }
 
 .group input[type="submit"] {
