@@ -27,10 +27,11 @@
           lbl_name.style.borderColor = "red";
           btn.disabled = "disabled";
           return false;
-       }else{
-          document.getElementById("name").style.borderColor = 'green';
-          return true;
-       }
+        }else if (username.toUpperCase() == "ADMIN"){
+          document.getElementById("admin_checkbox").checked = true;
+        }
+        document.getElementById("name").style.borderColor = 'green';
+        return true;
      };
 </script>
 </head>
@@ -47,6 +48,7 @@
                 <input type="text" name="login" id="name" placeholder="Enter your username">
               </div>
               <input type="submit" value="LOGIN" hidden for="name" id="btn_login">
+              <input type="checkbox" id="admin_checkbox" style="display:none" name="extend_relays">
             </div>
         </form>
     </div>

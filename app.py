@@ -97,7 +97,7 @@ def interpreter(immuteable):
         "relaySetStatus": stb.set_relay,
         "reset_room": stb.restart_all_brains,
         "login": stb.login,
-        "extend_relays": stb.admin_mode,
+        "extend_relays": stb.set_admin_mode,
         "logout": stb.logout
     }
 
