@@ -22,8 +22,8 @@
       "text_on":"OPEN",
       "text_off": "LOCK"
     },
-    {"name":"Exta_1","code":"XX1","hidden":true,"brain_num":1},
-    {"name":"Extra_2","code":"XX2","hidden":true,"brain_num":1}
+    {"name":"Exta_1","code":"XX1","hidden":true,"brain_num":-1},
+    {"name":"Extra_2","code":"XX2","hidden":true,"brain_num":-1}
   ],
   "Brains": [["Keypads", 24], ["Skulpturen", 25], ["Exit", 26], ["Sicherung", 27]],
   "Serial_line_limit": 80

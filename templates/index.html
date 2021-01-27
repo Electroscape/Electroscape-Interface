@@ -59,7 +59,27 @@
                     print_debugger(line)
                     var arr = line.split(",");
                     if (arr.length == 4 && arr[0].startsWith('!') && arr[arr.length-1] == "Done."){
-                             
+                        if (arr[2].startsWith('!'))// it is result
+                            {// check message keyword correct/wrong/reset
+                                switch (arr[2]) {
+                                    case "!correct":
+                                        console.log("Riddle Solved")
+                                        break;
+                                    case "!wrong":
+                                        console.log("Not Solved")
+                                        break;
+                                    case "!reset":
+                                        document.getElementById("input_"+arr[1]).innerHTML = 'NO INPUT'
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        else if (arr[1] == "SYS"){//do nothing
+                        }
+                        else{ // normal message display
+                            document.getElementById("input_"+arr[1]).innerHTML = arr[2]
+                        }   
                     }
 
                 }
