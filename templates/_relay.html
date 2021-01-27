@@ -3,49 +3,28 @@
 </tr>
 <tr>
     <th scope="row">
-        <div class="relay_status">
+        <div class="relay_status" id="status_{{relay.code}}">
             {{relay.status_frontend}}
         </div> 
     </th>
     <td>
-        <div class="riddle_input" id="relay_{{relay.name}}">
+        <div class="riddle_input" id="input_{{relay.code}}">
             No Input
         </div> 
     </td>
     <td>
-        <button class="btn_override"
-            id="btn_override_{{relay.name}}"
-            onClick="override_relay('{{relay}}', 'click')"
-        >Override</button>
+        <form method="POST" action="" onsubmit="return override_press();">
+            <button class="btn_override"
+                id="btn_{{relay.code}}"
+                onClick="override_relay('{{relay}}', 'click')"
+            >Override</button>
+        </form>
     </td>
+
     <script>
-        // update the checkbox values, who thought mixing a bunch of languages is fun
-        var box = document.getElementById("relay_{{relay.index}}_override");
-        console.log("value of relay is: " + '{{relay.auto_frontend}}');
-        // box.checked = {{relay.auto_frontend}};
-        // console.log(box.checked);
-    </script>
-
-
-
-
-        <!--
-        <select name="mode" class=relay.mode form="leave">
-            <option value="0">auto</option>
-            <option value="1">manual</option>
-        </select>
-        -->
-    <script>
-        function override_check(form, mode) {
-            console.log("override_check")
-            console.log("relay mode is: " + mode)
-            form.form.submit();
-            if (mode) {
-                //alert("Uncheck Auto")
-            } else {
-                //form.form.submit();
-            }
-
+        function override_press() {
+            console.log("override submit to backend");
+            return true;
         }
     </script>
 </tr>

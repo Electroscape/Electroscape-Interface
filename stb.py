@@ -86,6 +86,7 @@ class Relay:
 
     def __init__(self, index, **kwargs):
         self.name = kwargs.get('name', "Extra")
+        self.code = kwargs.get('code', "XX"+str(index))
         self.active_high = kwargs.get('active_high', True)
         self.auto = kwargs.get('auto', True)
         self.text_on = kwargs.get('text_on', "ON")

@@ -56,18 +56,27 @@
                 var all_lines = lines.split("\n")
                 for (let index = 0; index < all_lines.length; index++) {
                     var line = all_lines[index];
-                    document.getElementById("TestHere1").innerHTML = line
+                    print_debugger(line)
                     var arr = line.split(",");
                     if (arr.length == 4 && arr[0].startsWith('!') && arr[arr.length-1] == "Done."){
-                        document.getElementById("TestHere2").innerHTML = arr[1]
-                        document.getElementById("TestHere3").innerHTML = arr[2]
-                    }else{
-                        document.getElementById("TestHere2").innerHTML = arr.length
-                        document.getElementById("TestHere3").innerHTML = "Different?"
+                             
                     }
-                    
+
                 }
             }
+
+            function print_debugger(line){
+                document.getElementById("TestHere1").innerHTML = line
+                var arr = line.split(",");
+                if (arr.length == 4 && arr[0].startsWith('!') && arr[arr.length-1] == "Done."){
+                    document.getElementById("TestHere2").innerHTML = arr[1]
+                    document.getElementById("TestHere3").innerHTML = arr[2]
+                }else{
+                    document.getElementById("TestHere2").innerHTML = arr.length
+                    document.getElementById("TestHere3").innerHTML = "Different?"
+                }
+            }
+
             socket.on('serial_update', function(data) {
                 console.log("received serial lines: "+ data.lines.toString());
                 var newline_cnt = data.lines.length;
