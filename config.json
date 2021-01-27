@@ -1,16 +1,15 @@
 {
   "Room_name": "HH2 Lab - Gallery Stuttgart",
-  "Relays are Name, Active High, Auto, Hidden, BrainNo (Physical stuff is Indexed from 1)": "",
+  "Relays are Name, Active High, Auto, Hidden, Brain num (starting=1,no brain=-1), Relay code (on brain)": "",
   "Relays": [
-    ["Light", true, true, false, 1],
-    ["Fire place", true, true, false, 1],
-    ["Safe", true, true, false, 1],
-    ["UV Light", true, true, false, 1],
-    ["Alarm", true, true, true, 1],
-    ["Exit", true, true, true, 1],
-    ["Extra_3", true, true, true, 1],
-    ["Extra_4", true, true, true, 1]
-
+    ["Light",        true,  true, false,  1, "LIT"],
+    ["Fire place",   true,  true, false,  2, "FPK"],
+    ["Safe",         true,  true, false,  3, "HID"],
+    ["UV Light",     true,  true, false,  4, "UVL"],
+    ["Alarm",        true,  true, false,  1, "ALA"],
+    ["Exit",         true,  true, false,  1, "EXT"],
+    ["Extra_3",      true,  true,  true, -1, "XXX"],
+    ["Extra_4",      true,  true,  true, -1, "XXX"]
   ],
   "Brains": [["Keypads", 24], ["Skulpturen", 25], ["Exit", 26], ["Sicherung", 27]],
   "Serial_line_limit": 80
