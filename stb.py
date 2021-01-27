@@ -72,9 +72,9 @@ class Relay:
     def __set_frontend_status(self):
         print("setting status for frontend for relay {}".format(self.name))
         if self.status:
-            self.status_frontend = "On"
+            self.status_frontend = self.text_on
         else:
-            self.status_frontend = "Off"
+            self.status_frontend = self.text_off
 
     def set_status(self, status):
         self.status = status
@@ -84,16 +84,18 @@ class Relay:
             self.btn_clr_frontend = "red"
         self.__set_frontend_status()
 
-    def __init__(self, name, active_high, auto, hidden, brain_association, index):
-        self.name = name
-        self.active_high = active_high
-        self.auto = auto
+    def __init__(self, index, **kwargs):
+        self.name = kwargs.get('name', "Extra")
+        self.active_high = kwargs.get('active_high', True)
+        self.auto = kwargs.get('auto', True)
+        self.text_on = kwargs.get('text_on', "ON")
+        self.text_off = kwargs.get('text_off', "OFF")
         self.auto_frontend = "true"
         # this just is a function used to set the frontend to the same as backend,
         # just here to init the latter
         self.set_auto(self.auto)
-        self.hidden = hidden
-        self.brain_association = brain_association
+        self.hidden = kwargs.get('hidden', False)
+        self.brain_association = kwargs.get('brain_association', -1)
         self.status = False
         # since its going to be a pain in the ass on frontend even converting bools...
         self.btn_clr_frontend = 'green'
@@ -159,7 +161,7 @@ class STB:
         cmd_socket = SocketServer(cmd_port)
 
         for i, relay in enumerate(relays):
-            relays[i] = Relay(*(relay + [i]))
+            relays[i] = Relay(i,**relay)
 
         for i, brain_data in enumerate(brains):
             brain, reset_pin = brain_data
@@ -172,23 +174,23 @@ class STB:
         self.pcf_read = PCF8574(1, 0x38)
         self.pcf_write = PCF8574(1, 0x3f)
         # since the creating the instances does fail silently let's check
-        for port in range(8):
-            self.__read_pfc(port)
+        for pin in range(len(self.relays)): #What if configured relays less than 8? __read_pcf() out of range
+            self.__read_pcf(pin)
             try:
-                self.pcf_write.port[port]
+                self.pcf_write.port[pin]
             except IOError:
                 self.error = "Error with write PCF"
 
-    def __write_pcf(self, port, value):
+    def __write_pcf(self, pin, value):
         try:
-            self.pcf_write.port[port] = value
+            self.pcf_write.port[pin] = value
         except IOError:
             self.error = "Error with write PCF"
 
-    def __read_pfc(self, port):
-        ret = self.relays[port].status
+    def __read_pcf(self, pin):
+        ret = self.relays[pin].status
         try:
-            ret = bool(self.pcf_read.port[port])
+            ret = bool(self.pcf_read.port[pin])
         except IOError:
             self.error = "Error with write PCF"
         return ret
@@ -219,7 +221,7 @@ class STB:
         # function only flips existing variable
         relay = self.relays[int(relay_index)]
         relay.set_auto(not relay.auto)
-        self.__log_action("User {} has set relay_no {} override to {}".format(
+        self.__log_action("{} relay {} auto {}".format(
             self.user, relay.index, relay.auto))
 
     # changes form the frontend applied to the GPIO pins
@@ -232,7 +234,7 @@ class STB:
         print("setting relay {} to status {}".format(part_index, status))
         relay.set_status(status)
         self.__write_pcf(relay.index, relay.status)
-        self.__log_action("User {} has flipped {} status {} to {}".format(
+        self.__log_action("User {} Relay {} from {} to {}".format(
             self.user, relay.name, not status, status))
         # takes the cake for the unsexiest variable
         cmd_socket.transmit("!log: {}".format(self.brains[relay.brain_association].name))
@@ -275,7 +277,7 @@ class STB:
 
     def __log_action(self, message):
         self.__add_serial_lines([message])
-        cmd_socket.transmit(message)
+        cmd_socket.transmit("!RPi,action,"+message+",Done.")
 
     def set_admin_mode(self, *_):
         self.admin_mode = True
@@ -310,10 +312,10 @@ class STB:
         for relay_no, relay in enumerate(self.relays):
             # auto = true, manual = false
             if relay.auto:
-                new_status = self.__read_pfc(relay_no)
+                new_status = self.__read_pcf(relay_no)
                 if new_status != relay.status:
                     relay.set_status(new_status)
-                    relay_msg = "Relay {} has been switched to {} by the brain ".format(relay.name, relay.status)
+                    relay_msg = "Relay {} switched to {}".format(relay.name, relay.status)
                     if self.admin_mode or not relay.hidden:
                         self.__log_action(relay_msg)
                     else:

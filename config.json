@@ -1,15 +1,29 @@
 {
   "Room_name": "HH2 Lab - Gallery Stuttgart",
-  "Relays are Name, Active High, Auto, Hidden, Brain num (starting=1,no brain=-1), Relay code (on brain)": "",
   "Relays": [
-    ["Light",        true,  true, false,  1, "LIT"],
-    ["Fire place",   true,  true, false,  2, "FPK"],
-    ["Safe",         true,  true, false,  3, "HID"],
-    ["UV Light",     true,  true, false,  4, "UVL"],
-    ["Alarm",        true,  true, false,  1, "ALA"],
-    ["Exit",         true,  true, false,  1, "EXT"],
-    ["Extra_3",      true,  true,  true, -1, "XXX"],
-    ["Extra_4",      true,  true,  true, -1, "XXX"]
+    {
+      "name":"Light",
+      "code":"LIT",
+      "active_high":true,
+      "auto":true,
+      "hidden":false,
+      "text_on":"ON",
+      "text_off": "OFF",
+      "brain_num":1
+    },
+    {"name":"Fire place","code":"FPK", "brain_num":2},
+    {"name":"Safe","code":"HID","brain_num":3},
+    {"name":"UV Light","code":"UVL","brain_num":4,
+      "text_on":"OPEN",
+      "text_off": "LOCK"
+    },
+    {"name":"Alarm","code":"ALA","brain_num":1},
+    {"name":"Exit","code":"EXT","brain_num":1,
+      "text_on":"OPEN",
+      "text_off": "LOCK"
+    },
+    {"name":"Exta_1","code":"XXX","hidden":true,"brain_num":1},
+    {"name":"Extra_2","code":"XXX","hidden":true,"brain_num":1}
   ],
   "Brains": [["Keypads", 24], ["Skulpturen", 25], ["Exit", 26], ["Sicherung", 27]],
   "Serial_line_limit": 80
