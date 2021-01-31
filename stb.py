@@ -9,6 +9,7 @@ from serial_brain.socketServer import SocketServer
 from pcf8574 import PCF8574
 from time import sleep
 from threading import Thread
+from re import split, match, search
 
 # TODO:
 '''
@@ -50,10 +51,11 @@ def brain_restart_thread(gpio, reset_pins):
 
 
 class Settings:
-    def __init__(self, room_name, serial_limit):
+    def __init__(self, room_name, serial_limit, brain_tag):
         self.room_name = room_name
         self.is_rpi_env = True
         self.serial_limit = serial_limit
+        self.brain_tag = brain_tag
 
 
 class Relay:
@@ -98,6 +100,7 @@ class Relay:
         self.hidden = kwargs.get('hidden', False)
         self.brain_association = kwargs.get('brain_association', -1)
         self.status = False
+        self.last_message = "No Input"
         # since its going to be a pain in the ass on frontend even converting bools...
         self.btn_clr_frontend = 'green'
         self.set_status(self.status)
@@ -131,6 +134,7 @@ class STB:
         self.user = False
         self.admin_mode = False
         self.error = False
+        self.riddles_updated = False
         self.update_stb()
         print("stb init done")
 
@@ -152,6 +156,7 @@ class STB:
                 cfg = json.loads(json_file.read())
                 serial_port = cfg["serial_port"]
                 cmd_port = cfg["cmd_port"]
+                brain_tag = cfg["brain_tag"]
         except ValueError as e:
             print('failure to read serial_config.json')
             print(e)
@@ -168,7 +173,7 @@ class STB:
             brain, reset_pin = brain_data
             brains[i] = Brain(brain, relays, i, reset_pin)
 
-        settings = Settings(room_name, serial_limit)
+        settings = Settings(room_name, serial_limit, brain_tag)
         return settings, relays, brains
 
     def __pcf_init(self):
@@ -300,6 +305,29 @@ class STB:
             self.GPIO.output(brain.reset_pin, False)
     '''
 
+    # checks for keyworded messaged that contain updates to riddles and passes it on
+    def __filter(self, lines):
+        for line in lines:
+            # only evaluate complete messages
+            if match(self.settings.brain_tag, line) is None:
+                continue
+            if search("Done.*$", line) is None:
+                continue
+            try:
+                brain_name, source, msg = split(",", line)
+            except ValueError:
+                print("incomplete message, discarding following {}".format(line))
+                continue
+            if match("sys", source.lower()) is not None:
+                continue
+
+            for relay in self.relays:
+                if match(relay.name, source) is None:
+                    continue
+                relay.last_message = msg
+                self.riddles_updated = True
+                break
+
     def __add_serial_lines(self, lines):
         for line in lines:
             # if we have problems with line termination for whatever reason we can edit them here
@@ -328,6 +356,7 @@ class STB:
         ser_lines = serial_socket.read_buffer()
         if ser_lines is not None:
             ser_lines = reversed(ser_lines)
+            self.__filter(ser_lines)
             self.__add_serial_lines(ser_lines)
 
     def cleanup(self):

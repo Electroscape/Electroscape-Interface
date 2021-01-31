@@ -162,6 +162,9 @@ def updater():
             if len(stb.serial_updates) > 0:
                 socketio.emit('serial_update', {'lines': stb.serial_updates}, namespace='/test', broadcast=True)
                 stb.serial_updates = []
+            if stb.riddles_updated:
+                socketio.emit('riddles_updated', {}, namespace='/test', broadcast=True)
+                stb.riddles_updated = False
             socketio.sleep(0.1)
     finally:
         stb.cleanup()
