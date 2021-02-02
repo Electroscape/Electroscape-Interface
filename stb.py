@@ -100,6 +100,7 @@ class Relay:
         self.hidden = kwargs.get('hidden', False)
         self.brain_association = kwargs.get('brain_association', -1)
         self.status = False
+        self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
         # since its going to be a pain in the ass on frontend even converting bools...
         self.btn_clr_frontend = 'green'
@@ -298,6 +299,7 @@ class STB:
         for rel in self.relays:
             data.append({
                 "code": rel.code,
+                "first_message": rel.first_message,
                 "last_message": rel.last_message
             }
             )
