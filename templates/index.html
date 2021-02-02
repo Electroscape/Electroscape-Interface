@@ -80,10 +80,17 @@
 
             socket.on('riddles_updated', function(relays){
                 var elems = document.body.getElementsByClassName("riddle_input");
-                elems.forEach( elm => {
-                    relays.forEach(rel => { 
+
+                [].forEach.call(elems, function(elm){
+                    relays.relays.forEach(rel => { 
                         if (elm.id == "input_" + rel.code){ 
-                            elm.innerHTML = rel.last_message;
+                            if (rel.last_message.startsWith("!")){
+                                // Correct or Wrong or reset
+                                // for now just show a message
+                                elm.innerHTML = "Results =D";
+                            } else {
+                                elm.innerHTML = rel.last_message;
+                            }
                         }
                     })
                 })

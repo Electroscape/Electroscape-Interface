@@ -134,7 +134,7 @@ class STB:
         self.user = False
         self.admin_mode = False
         self.error = False
-        self.riddles_updated = False
+        self.riddles_updated = True #Start with true to update frontend
         self.update_stb()
         print("stb init done")
 
@@ -293,6 +293,15 @@ class STB:
         self.user = False
         self.admin_mode = False
 
+    def relays_to_dict(self): #Extract useful info from nested classes
+        data = []
+        for rel in self.relays:
+            data.append({
+                "code": rel.code,
+                "last_message": rel.last_message
+            }
+            )
+        return data
     '''
     # question is if we need to create a seperate thread or handle pausing differently
     # need to check likely we need to consider flasks limitations

@@ -163,7 +163,7 @@ def updater():
                 socketio.emit('serial_update', {'lines': stb.serial_updates}, namespace='/test', broadcast=True)
                 stb.serial_updates = []
             if stb.riddles_updated:
-                socketio.emit('riddles_updated', {}, namespace='/test', broadcast=True)
+                socketio.emit('riddles_updated', {'relays': stb.relays_to_dict()}, namespace='/test', broadcast=True)
                 stb.riddles_updated = False
             socketio.sleep(0.1)
     finally:

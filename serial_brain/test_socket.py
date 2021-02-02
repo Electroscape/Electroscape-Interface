@@ -2,7 +2,14 @@
 # 2CP - TeamEscape - Engineering
 
 # The purpose of this script is to give a socket that can be used to test the frontend by feeding it tagged lines
-
+# Frame examples: for copy and paste
+# !BrLight,LIT,123,Done.
+# !BrCUBE,UVL,C1 __ C2,Done.
+# !BrLight,LIT,!Correct,Done.
+# !BrAny,HID,!Wrong,Done.
+# !BrLight,LIT,!Reset,Done.
+# !BrCUBE,SYS,refresh,Done.
+# !BrLight,SYS,Setup done,Done.
 
 from socketServer import SocketServer
 import json
