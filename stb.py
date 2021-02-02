@@ -100,7 +100,7 @@ class Relay:
         self.hidden = kwargs.get('hidden', False)
         self.brain_association = kwargs.get('brain_association', -1)
         self.status = False
-        self.last_message = "No Input"
+        self.last_message = kwargs.get('first_message', "No Input")
         # since its going to be a pain in the ass on frontend even converting bools...
         self.btn_clr_frontend = 'green'
         self.set_status(self.status)
@@ -314,15 +314,17 @@ class STB:
             if search("Done.*$", line) is None:
                 continue
             try:
-                brain_name, source, msg = split(",", line)
+                brain_name, source, msg, _ = split(",", line)
             except ValueError:
                 print("incomplete message, discarding following {}".format(line))
                 continue
             if match("sys", source.lower()) is not None:
+                # Brain is alive (Update ON box in frontend)
+                _ = brain_name  
                 continue
 
             for relay in self.relays:
-                if match(relay.name, source) is None:
+                if match(relay.code, source) is None:
                     continue
                 relay.last_message = msg
                 self.riddles_updated = True

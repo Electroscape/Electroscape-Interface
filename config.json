@@ -7,20 +7,22 @@
       "active_high":true,
       "auto":true,
       "hidden":false,
-      "text_on":"ON",
-      "text_off": "OFF",
       "brain_num":1
     },
-    {"name":"Fire place","code":"FPK", "brain_num":2},
-    {"name":"Safe","code":"HID","brain_num":3},
-    {"name":"UV Light","code":"UVL","brain_num":4,
+    {"name":"Fire place","code":"FPK", "brain_num":2,
       "text_on":"OPEN",
-      "text_off": "LOCK"
+      "text_off": "CLOSED"
     },
+    {"name":"Safe","code":"HID","brain_num":3,
+      "text_on":"HIDDEN",
+      "text_off": "VISIBLE"
+    },
+    {"name":"UV Light","code":"UVL","brain_num":4},
     {"name":"Alarm","code":"ALA","brain_num":1},
     {"name":"Exit","code":"EXT","brain_num":1,
+      "first_message": "COMPASS IN SAFE",
       "text_on":"OPEN",
-      "text_off": "LOCK"
+      "text_off": "CLOSED"
     },
     {"name":"Exta_1","code":"XX1","hidden":true,"brain_num":-1},
     {"name":"Extra_2","code":"XX2","hidden":true,"brain_num":-1}
