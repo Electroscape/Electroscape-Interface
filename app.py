@@ -159,12 +159,15 @@ def updater():
                 # https://stackoverflow.com/questions/18478287/making-object-json-serializable-with-regular-encoder/18561055
                 socketio.emit('relay_update', {'updates': stb.updates}, namespace='/test', broadcast=True)
                 stb.updates = []
+
             if len(stb.serial_updates) > 0:
                 socketio.emit('serial_update', {'lines': stb.serial_updates}, namespace='/test', broadcast=True)
                 stb.serial_updates = []
+
             if stb.riddles_updated:
                 socketio.emit('riddles_updated', {'relays': stb.relays_to_dict()}, namespace='/test', broadcast=True)
                 stb.riddles_updated = False
+                
             socketio.sleep(0.1)
     finally:
         stb.cleanup()

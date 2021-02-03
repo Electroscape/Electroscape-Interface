@@ -80,10 +80,6 @@ class Relay:
 
     def set_status(self, status):
         self.status = status
-        if self.status:
-            self.btn_clr_frontend = "green"
-        else:
-            self.btn_clr_frontend = "red"
         self.__set_frontend_status()
 
     def __init__(self, index, **kwargs):
@@ -103,7 +99,7 @@ class Relay:
         self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
         # since its going to be a pain in the ass on frontend even converting bools...
-        self.btn_clr_frontend = 'green'
+        self.riddle_status = "unsolved" #unsolved, correct or wrong (ternary logic)
         self.set_status(self.status)
         self.index = index
         self.auto_default = self.auto
@@ -299,6 +295,7 @@ class STB:
         for rel in self.relays:
             data.append({
                 "code": rel.code,
+                "riddle_status": rel.riddle_status,
                 "first_message": rel.first_message,
                 "last_message": rel.last_message
             }
@@ -338,8 +335,17 @@ class STB:
                 if match(relay.code, source) is None:
                     continue
                 relay.last_message = msg
+                relay.riddle_status = "unsolved"
                 self.riddles_updated = True
-                break
+                if match('!',msg) is None:
+                    break
+                else:   
+                    if msg.lower() == '!correct': 
+                        relay.riddle_status = "correct"
+                    elif msg.lower() == '!wrong':
+                        relay.riddle_status = "wrong"
+                    elif msg.lower() == '!reset':
+                        relay.last_message = relay.first_message                      
 
     def __add_serial_lines(self, lines):
         for line in lines:
@@ -357,12 +363,12 @@ class STB:
                 new_status = self.__read_pcf(relay_no)
                 if new_status != relay.status:
                     relay.set_status(new_status)
-                    relay_msg = "Relay {} switched to {}".format(relay.name, relay.status)
+                    relay_msg = "Relay {} switched to {} by Brain".format(relay.code, relay.status)
                     if self.admin_mode or not relay.hidden:
                         self.__log_action(relay_msg)
                     else:
                         cmd_socket.transmit(relay_msg)
-                    self.updates.insert(0, [relay_no, relay.status_frontend, relay.btn_clr_frontend])
+                    self.updates.insert(0, [relay_no, relay.status_frontend, relay.riddle_status])
                 self.__write_pcf(relay_no, new_status)
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])

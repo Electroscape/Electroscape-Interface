@@ -5,6 +5,10 @@
     body {
         background-image: url("{{ url_for('static', filename='img/Hintergrund_Standard.jpg') }}")
     }
+    #fireworks_canvas{
+        display: none;
+        position: absolute;
+    }
 </style>
 
 <head>
@@ -78,35 +82,55 @@
                 old_lines.length = Math.min(old_lines.length, '{{ serial_limit }}');
                 document.getElementById("serial_log").innerHTML = old_lines.join("<br/>")
             });
+            
+            function riddle_correct_solution(relay){
+                canv = document.getElementById("fireworks_canvas"); 
+                canv.style.display = "inline-block";
+                setTimeout(function(){ canv.style.display = "none" }, 3000);
+                stat = document.getElementById("status_"+relay.code);
+                stat.style.borderColor = "green";
+                inp = document.getElementById("input_"+relay.code);
+                inp.style.borderColor = "green";
+            }
 
-            socket.on('riddles_updated', function (relays) {
+            function riddle_wrong_solution(relay){
+                stat = document.getElementById("status_"+relay.code);
+                stat.style.borderColor = "red";
+                inp = document.getElementById("input_"+relay.code);
+                inp.style.borderColor = "red";
+                inp.innerHTML = "WRONG SOLUTION";
+            }
+
+            function riddle_normal_display(relay){
+                stat = document.getElementById("status_"+relay.code);
+                stat.style.borderColor = "#555";
+                inp = document.getElementById("input_"+relay.code);
+                inp.style.borderColor = "#555";
+                inp = document.getElementById("input_"+relay.code);
+                inp.innerHTML = relay.last_message;
+            }
+
+            function riddle_update_frontend(relays) {
                 var elems = document.body.getElementsByClassName("riddle_input");
 
                 [].forEach.call(elems, function (elm) {
-                    relays.relays.forEach(rel => {
+                    for (let rel of relays.relays) {
                         if (elm.id == "input_" + rel.code) {
-                            if (rel.last_message.startsWith("!")) {
-                                // Correct or Wrong or reset
-                                var msg_text = "";
-                                switch (rel.last_message.toLowerCase()) {
-                                    case "!correct":
-                                        msg_text = "Good =D";
-                                        break;
-                                    case "!reset":
-                                        msg_text = rel.first_message;
-                                        break;
-                                    case "!wrong":
-                                        msg_text = "Bad =(";
-                                        break;
-                                }
-                                    // for now just show a message
-                                    elm.innerHTML = msg_text;
+                            if (rel.riddle_status == 'correct') {
+                                riddle_correct_solution(rel)
+                            } else if (rel.riddle_status == 'wrong') {
+                                riddle_wrong_solution(rel)
                             } else {
-                                elm.innerHTML = rel.last_message;
+                                riddle_normal_display(rel)
                             }
+                            break;
                         }
-                    })
+                    }
                 })
+            }
+
+            socket.on('riddles_updated', function(relays){
+                riddle_update_frontend(relays);
             });
             
             socket.on('heartbeat_pulse', function(data) {
@@ -131,7 +155,7 @@
 <body>
     {% include '_navbar.html' %}
     <br>
-
+    <canvas id='fireworks_canvas' width='800' height='800'></canvas>
     <!--
 <button class="collapsible" onclick="toggle_collapse">Show Relays</button>
 -->
@@ -174,13 +198,12 @@
                 <th scope="col" style="padding: 50px 50px 0px 50px;">Override</th>
             </tr>
             {% for relay in relays %}
-            {% if not relay.hidden or username.lower() == "admin" %}
-            {% include '_relay.html' %}
-            {% endif %}
+                {% if not relay.hidden or username.lower() == "admin" %}
+                    {% include '_relay.html' %}
+                {% endif %}
             {% endfor %}
         </table>
     </div>
-
     <br>
     <br>
     <br>
@@ -237,6 +260,9 @@
 </div>
 -->
     {% endif %}
+    <!--Firework canvas-->
+    <script src="{{url_for('static', filename='js/fireworks.js')}}">
+    </script>
 </body>
 
 </html>
