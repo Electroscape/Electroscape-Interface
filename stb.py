@@ -6,7 +6,6 @@ import json
 # from datetime import datetime as dt
 from serial_brain.socket_client import SocketClient
 from serial_brain.socketServer import SocketServer
-from pcf8574 import PCF8574
 from time import sleep
 from threading import Thread
 from re import split, match, search
@@ -174,6 +173,11 @@ class STB:
         return settings, relays, brains
 
     def __pcf_init(self):
+        if self.settings.is_rpi_env:
+            from pcf8574 import PCF8574
+        else:
+            from PCF_dummy import PCF8574
+
         self.pcf_read = PCF8574(1, 0x38)
         self.pcf_write = PCF8574(1, 0x3f)
         # since the creating the instances does fail silently let's check
