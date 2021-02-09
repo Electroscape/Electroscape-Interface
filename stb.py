@@ -256,6 +256,8 @@ class STB:
 
         pins = []
         for brain in self.brains:
+            for relay in brain.associated_relays:
+                relay.last_message_status = relay.first_message
             brain.reset_relay_modes()
             pins.append(brain.reset_pin)
         thread = Thread(target=brain_restart_thread, args=(self.GPIO, pins,))
@@ -264,6 +266,8 @@ class STB:
     def restart_brain(self, brain):
         pins = [brain.reset_pin]
         brain.reset_relay_modes()
+        for relay in brain.associated_relays:
+            relay.last_message_status = relay.first_message
         thread = Thread(target=brain_restart_thread, args=(self.GPIO, pins,))
         thread.start()
 
