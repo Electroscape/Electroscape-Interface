@@ -99,7 +99,7 @@ class Relay:
         self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
         # since its going to be a pain in the ass on frontend even converting bools...
-        self.riddle_status = "unsolved" #unsolved, correct or wrong (ternary logic)
+        self.riddle_status = "unsolved"     # unsolved, correct or wrong (ternary logic)
         self.set_status(self.status)
         self.index = index
         self.auto_default = self.auto
@@ -131,7 +131,7 @@ class STB:
         self.user = False
         self.admin_mode = False
         self.error = False
-        self.riddles_updated = True #Start with true to update frontend
+        self.riddles_updated = True     # Start with true to update frontend
         self.update_stb()
         print("stb init done")
 
@@ -164,7 +164,7 @@ class STB:
         cmd_socket = SocketServer(cmd_port)
 
         for i, relay in enumerate(relays):
-            relays[i] = Relay(i,**relay)
+            relays[i] = Relay(i, **relay)
 
         for i, brain_data in enumerate(brains):
             brain, reset_pin = brain_data
@@ -177,7 +177,10 @@ class STB:
         self.pcf_read = PCF8574(1, 0x38)
         self.pcf_write = PCF8574(1, 0x3f)
         # since the creating the instances does fail silently let's check
-        for pin in range(len(self.relays)): #What if configured relays less than 8? __read_pcf() out of range
+        # What if configured relays less than 8? __read_pcf() out of range
+        # @abdullah the class always has a list of 8 values due to being written for PCFs ...
+        # the question TBD here is what do want TODO: with this to have a predictable init of those values
+        for pin in range(len(self.relays)):
             self.__read_pcf(pin)
             try:
                 self.pcf_write.port[pin]
@@ -290,7 +293,7 @@ class STB:
         self.user = False
         self.admin_mode = False
 
-    def relays_to_dict(self): #Extract useful info from nested classes
+    def relays_to_dict(self):   # Extract useful info from nested classes
         data = []
         for rel in self.relays:
             data.append({
@@ -332,12 +335,13 @@ class STB:
                 continue
 
             for relay in self.relays:
+                # TODO: @abdullah, does this work with additional messages after the riddles has been solved?
                 if match(relay.code, source) is None:
                     continue
                 relay.last_message = msg
                 relay.riddle_status = "unsolved"
                 self.riddles_updated = True
-                if match('!',msg) is None:
+                if match('!', msg) is None:
                     break
                 else:   
                     if msg.lower() == '!correct': 
