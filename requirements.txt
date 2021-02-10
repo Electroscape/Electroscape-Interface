@@ -1,8 +1,8 @@
 # pip3 install -r requirements.txt
 
 python-dotenv
-flask
-flask_socketio
+flask==1.1.2
+flask_socketio==5.0.1
 Werkzeug==0.16.1
 
 # for the logger
