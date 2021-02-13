@@ -284,7 +284,7 @@ class STB:
     # *_ dumps unused variables
     def login(self, *args):
         user = args[1]
-        msg = "loggig in user {}".format(user)
+        msg = "logging in user {}".format(user)
         print(msg)
         cmd_socket.transmit("!login: {}".format(user))
         self.user = user
@@ -309,8 +309,7 @@ class STB:
                 "riddle_status": rel.riddle_status,
                 "first_message": rel.first_message,
                 "last_message": rel.last_message
-            }
-            )
+            })
         return data
     '''
     # question is if we need to create a seperate thread or handle pausing differently
@@ -346,18 +345,21 @@ class STB:
                 # TODO: @abdullah, does this work with additional messages after the riddles has been solved?
                 if match(relay.code, source) is None:
                     continue
+                # if the riddle has been solved we no longer track it
+                if relay.riddle_status == "!correct":
+                    break
+
                 relay.last_message = msg
                 relay.riddle_status = "unsolved"
                 self.riddles_updated = True
                 if match('!', msg) is None:
                     break
-                else:   
-                    if msg.lower() == '!correct': 
-                        relay.riddle_status = "correct"
-                    elif msg.lower() == '!wrong':
-                        relay.riddle_status = "wrong"
-                    elif msg.lower() == '!reset':
-                        relay.last_message = relay.first_message                      
+                if msg.lower() == '!correct':
+                    relay.riddle_status = msg.lower()[1:]
+                if msg.lower() == '!wrong':
+                    relay.riddle_status = msg.lower()[1:]
+
+                # TODO: Not sure where we left at reset since arduino get get stuck in restart loops
 
     def __add_serial_lines(self, lines):
         for line in lines:
