@@ -2,22 +2,32 @@
 # 2CP - TeamEscape - Engineering
 
 from socketServer import SocketServer
+from pathlib import Path
 import json
 from glob import glob
-import serial.rs485
+import serial
 from time import sleep
-import RPi.GPIO as GPIO     # to control drive/read enable MAX485
-
-
 try:
-    with open('serial_config.json') as json_file:
-        cfg = json.loads(json_file.read())
-        baud = cfg["baud"]
-        socket_port = cfg["serial_port"]
-        rs_ctrl_pin = cfg["rs_ctrl_pin"]    # Broadcom pin 26
-except ValueError as e:
-    print('failure to read serial_config.json')
-    print(e)
+    import RPi.GPIO as GPIO     # to control drive/read enable MAX485
+except ModuleNotFoundError:
+    print("Non PiEnv using GPIO emulator")
+    from GPIOEmulator.EmulatorGUI import GPIO
+
+baud = None
+for file_name in ['serial_brain/serial_config.json', 'serial_config.json']:
+    if Path(file_name).is_file():
+        try:
+            with open(file_name) as json_file:
+                cfg = json.loads(json_file.read())
+                baud = cfg["baud"]
+                socket_port = cfg["serial_port"]
+                rs_ctrl_pin = cfg["rs_ctrl_pin"]    # Broadcom pin 26
+        except ValueError as e:
+            print('failure to read serial_config.json')
+            print(e)
+            exit()
+if baud is None:
+    print("serial_config not found")
     exit()
 
 
