@@ -7,6 +7,8 @@ __pycache__/
 
 .idea/
 
+.vscode
+
 templates/backup_old/*
 
 GPIOEmulator/*

@@ -12,7 +12,7 @@ from re import split, match, search
 
 # TODO:
 '''
-log receiving relay actions aswell
+log receiving relay actions as well
 - Except PCF with not for an override
     raise IOError(ffi.errno)
     OSError: 121
@@ -30,7 +30,7 @@ rpi_env = True
 '''
     don't ask, everything on the frontend get smeared into strings
     bool_dict = {"true": True, "false": False}
-    bool_convert = {"True": "false", "Talse": "true"}
+    bool_convert = {"True": "false", "False": "true"}
 '''
 bool_dict = {"on": True, "off": False}
 serial_socket = None
@@ -38,7 +38,7 @@ cmd_socket = None
 # counter = 0
 
 
-# if the threading here doesnt work move it to app into the updater thread
+# if the threading here doesn't work move it to app into the updater thread
 def brain_restart_thread(gpio, reset_pins):
     for reset_pin in reset_pins:
         gpio.output(reset_pin, True)
@@ -82,6 +82,9 @@ class Relay:
         self.__set_frontend_status()
 
     def __init__(self, index, **kwargs):
+        self.relay_no = kwargs.get('relay_num', -1)
+        # Relay number is essential parameter
+        assert (0 <= self.relay_no <= 7) , "Relay number should be from 0 to 7"
         self.name = kwargs.get('name', "Extra")
         self.code = kwargs.get('code', "XX"+str(index))
         self.active_high = kwargs.get('active_high', True)
@@ -97,8 +100,8 @@ class Relay:
         self.status = False
         self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
-        # since its going to be a pain in the ass on frontend even converting bools...
-        self.riddle_status = "unsolved"     # unsolved, correct or wrong (ternary logic)
+        # unsolved, done, correct or wrong
+        self.riddle_status = "unsolved"
         self.set_status(self.status)
         self.index = index
         self.auto_default = self.auto
@@ -181,10 +184,9 @@ class STB:
         self.pcf_read = PCF8574(1, 0x38)
         self.pcf_write = PCF8574(1, 0x3f)
         # since the creating the instances does fail silently let's check
-        # What if configured relays less than 8? __read_pcf() out of range
-        # @abdullah the class always has a list of 8 values due to being written for PCFs ...
-        # the question TBD here is what do want TODO: with this to have a predictable init of those values
-        for pin in range(len(self.relays)):
+        # Get pin value from relay_no attr in relay instance
+        for relay in self.relays:
+            pin = relay.relay_no
             self.__read_pcf(pin)
             try:
                 self.pcf_write.port[pin]
@@ -226,7 +228,7 @@ class STB:
         return GPIO
 
     def set_override(self, relay_index, value, test):
-        # do yourself a favour and dont pass values into html merely JS,
+        # do yourself a favour and don't pass values into html merely JS,
         # converting bools into 3 different languages smeared into json is not fun
         # function only flips existing variable
         relay = self.relays[int(relay_index)]
@@ -234,7 +236,7 @@ class STB:
         self.__log_action("{} relay {} auto {}".format(
             self.user, relay.index, relay.auto))
 
-    # changes form the frontend applied to the GPIO pins
+    # changes from the frontend applied to the GPIO pins
     def set_relay(self, part_index, status=None, test=None):
         print("set_relay vars {} {} {}".format(part_index, status, test))
         relay = self.relays[part_index]
@@ -243,11 +245,12 @@ class STB:
             status = not relay.status
         print("setting relay {} to status {}".format(part_index, status))
         relay.set_status(status)
-        self.__write_pcf(relay.index, relay.status)
+        self.__write_pcf(relay.relay_no, relay.status)
         self.__log_action("User {} Relay {} from {} to {}".format(
             self.user, relay.name, not status, status))
         # takes the cake for the unsexiest variable
-        cmd_socket.transmit("!log: {}".format(self.brains[relay.brain_association].name))
+        cmd_socket.transmit("!log: {}".format(
+            self.brains[relay.brain_association].name))
 
     def restart_all_brains(self, *_):
         txt = "\n\nroom has been reset by user {}\n\n".format(self.user)
@@ -291,7 +294,7 @@ class STB:
 
     def __log_action(self, message):
         self.__add_serial_lines([message])
-        cmd_socket.transmit("!RPi,action,"+message+",Done.")
+        cmd_socket.transmit("!RPi,action," + message + ",Done.")
 
     def set_admin_mode(self, *_):
         self.admin_mode = True
@@ -307,17 +310,16 @@ class STB:
             data.append({
                 "code": rel.code,
                 "riddle_status": rel.riddle_status,
-                "first_message": rel.first_message,
                 "last_message": rel.last_message
             })
         return data
     '''
-    # question is if we need to create a seperate thread or handle pausing differently
+    # question is if we need to create a separate thread or handle pausing differently
     # need to check likely we need to consider flasks limitations
     def reset_brains(self, brains):
         for brain in brains:
             self.GPIO.output(brain.reset_pin, True)
-        
+
         sleep(0.5)
         for brain in brains:
             self.GPIO.output(brain.reset_pin, False)
@@ -338,28 +340,32 @@ class STB:
                 continue
             if match("sys", source.lower()) is not None:
                 # Brain is alive (Update ON box in frontend)
-                _ = brain_name  
+                _ = brain_name
                 continue
 
             for relay in self.relays:
-                # TODO: @abdullah, does this work with additional messages after the riddles has been solved?
                 if match(relay.code, source) is None:
                     continue
+
                 # if the riddle has been solved we no longer track it
-                if relay.riddle_status == "!correct":
-                    break
+                if relay.riddle_status == "done":
+                    continue
+
+                # if the riddle has been solved we no longer track it
+                if relay.riddle_status == "correct":
+                    relay.riddle_status = "done"
+                    continue
 
                 relay.last_message = msg
                 relay.riddle_status = "unsolved"
                 self.riddles_updated = True
                 if match('!', msg) is None:
-                    break
-                if msg.lower() == '!correct':
-                    relay.riddle_status = msg.lower()[1:]
-                if msg.lower() == '!wrong':
-                    relay.riddle_status = msg.lower()[1:]
-
-                # TODO: Not sure where we left at reset since arduino get get stuck in restart loops
+                    # if the password is reset on the arduino
+                    if msg.lower() == '!reset':
+                        relay.last_message = relay.first_message
+                    # if !correct or !wrong
+                    else:
+                        relay.riddle_status = msg.lower()[1:]
 
     def __add_serial_lines(self, lines):
         for line in lines:
@@ -371,19 +377,21 @@ class STB:
 
     # reads and updates the STB and sets/mirrors states
     def update_stb(self):
-        for relay_no, relay in enumerate(self.relays):
+        for relay in self.relays:
             # auto = true, manual = false
             if relay.auto:
-                new_status = self.__read_pcf(relay_no)
+                new_status = self.__read_pcf(relay.relay_no)
                 if new_status != relay.status:
                     relay.set_status(new_status)
-                    relay_msg = "Relay {} switched to {} by Brain".format(relay.code, relay.status)
+                    relay_msg = "Relay {} switched to {} by Brain".format(
+                        relay.code, relay.status)
                     if self.admin_mode or not relay.hidden:
                         self.__log_action(relay_msg)
                     else:
                         cmd_socket.transmit(relay_msg)
-                    self.updates.insert(0, [relay_no, relay.status_frontend, relay.riddle_status])
-                self.__write_pcf(relay_no, new_status)
+                    self.updates.insert(
+                        0, [relay.relay_no, relay.status_frontend, relay.riddle_status])
+                self.__write_pcf(relay.relay_no, new_status)
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
         ser_lines = serial_socket.read_buffer()
@@ -397,16 +405,10 @@ class STB:
 
 # https://www.shanelynn.ie/asynchronous-updates-to-a-webpage-with-flask-and-socket-io/
 # https://flask-socketio.readthedocs.io/en/latest/
-# following didnt work iirc
+# following didn't work iirc
 # https://realpython.com/flask-by-example-implementing-a-redis-task-queue/
 
 
 # just here fore testing when running stb.py, usually this is imported
 if __name__ == "__main__":
     print("")
-
-
-
-
-
-

@@ -2,32 +2,83 @@
   "Room_name": "HH1 Lab - Gallery Stuttgart",
   "Relays": [
     {
-      "name":"Light",
-      "code":"LIT",
-      "active_high":true,
-      "auto":true,
-      "hidden":false,
-      "brain_num":1
+      "relay_num": 0,
+      "name": "Light",
+      "code": "LIT",
+      "active_high": true,
+      "auto": true,
+      "hidden": false,
+      "brain_num": 1
     },
-    {"name":"Fire place","code":"FPK", "brain_num":2,
-      "text_on":"OPEN",
+    {
+      "relay_num": 1,
+      "name": "Fire place",
+      "code": "FPK",
+      "brain_num": 2,
+      "text_on": "OPEN",
       "text_off": "CLOSED"
     },
-    {"name":"Safe","code":"HID","brain_num":3,
-      "text_on":"VISIBLE",
+    {
+      "relay_num": 2,
+      "name": "Safe",
+      "code": "HID",
+      "brain_num": 3,
+      "text_on": "VISIBLE",
       "text_off": "HIDDEN"
     },
-    {"name":"UV Light","code":"UVL","brain_num":4},
-    {"name":"Alarm","code":"ALA","brain_num":1,
+    {
+      "relay_num": 3,
+      "name": "UV Light",
+      "code": "UVL",
+      "brain_num": 4
+    },
+    {
+      "relay_num": 4,
+      "name": "Alarm",
+      "code": "ALA",
+      "brain_num": 1,
       "first_message": "COMPASS IN SAFE"
     },
-    {"name":"Exit","code":"EXT","brain_num":1,
-      "text_on":"OPEN",
+    {
+      "relay_num": 5,
+      "name": "Exit",
+      "code": "EXT",
+      "brain_num": 1,
+      "text_on": "OPEN",
       "text_off": "CLOSED"
     },
-    {"name":"Exta_1","code":"XX1","hidden":true,"brain_num":-1},
-    {"name":"Extra_2","code":"XX2","hidden":true,"brain_num":-1}
+    {
+      "relay_num": 6,
+      "name": "Extra_1",
+      "code": "XX1",
+      "hidden": true,
+      "brain_num": -1
+    },
+    {
+      "relay_num": 7,
+      "name": "Extra_2",
+      "code": "XX2",
+      "hidden": true,
+      "brain_num": -1
+    }
   ],
-  "Brains": [["Keypads", 24], ["Skulpturen", 25], ["Exit", 26], ["Sicherung", 27]],
+  "Brains": [
+    [
+      "Keypads",
+      24
+    ],
+    [
+      "COLOR_CODE",
+      25
+    ],
+    [
+      "CUBES",
+      26
+    ],
+    [
+      "SECRET_DOOR",
+      27
+    ]
+  ],
   "Serial_line_limit": 80
 }
