@@ -12,7 +12,7 @@
 # ## doing parallel threads to update the STB data on the frontend:
 
 # Asyncio is not yet supported by flask
-# gap between 3.6 and 3.7 versions, their examples are based on the latter, may use it for future prohects
+# gap between 3.6 and 3.7 versions, their examples are based on the latter, may use it for future projects
 # as it needs to be ironed out and established
 
 # socketio for JS websockets, i don't need another language... can i run socketio with a python script being called?
@@ -41,7 +41,7 @@ https://stackoverflow.com/questions/60156202/flask-app-wont-launch-importerror-c
 - clear up questions for future requirements to make sure
 the interpreter wont need to run exceptions
 - customized and colourized button status buttons inside json
-- add frontendaction report to (both?) logs aswell, having both requires a modification to the seriallogger
+- add frontendaction report to (both?) logs as well, having both requires a modification to the seriallogger
 - collapsible elements?
 - import socket ip and port as cfg? its used multiple times so best define it properly
 
@@ -49,10 +49,10 @@ the interpreter wont need to run exceptions
 - Verify double post of hidden elements is not causing problems?
 post returned: ImmutableMultiDict([('relayOverride_0', 'on'), ('relayOverride_0', '')])
 Answer to that: a dict with duplicate keys will return only the key once with for key in test_dict.keys():
-aswell as return the value of the last key duplicate so for our application we're fine since i do
+as well as return the value of the last key duplicate so for our application we're fine since i do
 all the work backend so far, if that changes we know how to do deal with duplicates.
 
-- rename set_relay ad set_ovpyterride to flip? maybe differentiation here with another func?
+- rename set_relay ad set_override to flip? maybe differentiation here with another func?
 
 # may be useful to monitor processes for restarts? Pkill python may not be the most elegant solution
 proc = subprocess.Popen(["python3", "usbSocketServer.py"])
@@ -90,8 +90,8 @@ def serial_buffer_request():
         emit('serial_update', {'lines': line}, namespace='/test')
 
 
-def interpreter(immuteable):
-    form_dict = immuteable.to_dict()
+def interpreter(immutable):
+    form_dict = immutable.to_dict()
     action_dict = {
         "relayOverride": stb.set_override,
         "relaySetStatus": stb.set_relay,

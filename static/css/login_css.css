@@ -29,7 +29,7 @@ background-color: black;
 transition: all .23s ease;
 }
 
-.group input:focus {
+.group input[type="text"]:focus {
 box-shadow: 0 0 5px 1px gold;
 outline: none;
 }

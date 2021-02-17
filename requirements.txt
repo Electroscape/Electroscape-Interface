@@ -6,7 +6,7 @@ flask_socketio==5.0.1
 Werkzeug==0.16.1
 
 # for the logger
-serial
+pyserial
 # glob3
 # socket
 # threading

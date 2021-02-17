@@ -6,6 +6,7 @@ from pathlib import Path
 import json
 from glob import glob
 import serial
+import serial.rs485
 from time import sleep
 try:
     import RPi.GPIO as GPIO     # to control drive/read enable MAX485

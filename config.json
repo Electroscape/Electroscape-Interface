@@ -63,22 +63,10 @@
     }
   ],
   "Brains": [
-    [
-      "Keypads",
-      24
-    ],
-    [
-      "COLOR_CODE",
-      25
-    ],
-    [
-      "CUBES",
-      26
-    ],
-    [
-      "SECRET_DOOR",
-      27
-    ]
+    [ "Keypads", 24],
+    [ "COLOR_CODE", 25],
+    [ "CUBES", 26],
+    [ "SECRET_DOOR", 27]
   ],
   "Serial_line_limit": 80
 }
