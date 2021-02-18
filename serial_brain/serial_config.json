@@ -3,6 +3,7 @@
     "baud": 115200,
     "serial_port": 12345,
     "cmd_port": 12346,
+    "test_port": 12350,
     "arduino_timeout": 8,
     "rs_ctrl_pin": 26,
 

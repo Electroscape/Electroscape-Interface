@@ -17,7 +17,7 @@ import json
 try:
     with open('serial_config.json') as json_file:
         cfg = json.loads(json_file.read())
-        socket_port = cfg["serial_port"]
+        socket_port = cfg["test_port"]
 except ValueError as e:
     print('failure to read serial_config.json')
     print(e)

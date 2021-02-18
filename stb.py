@@ -33,7 +33,7 @@ rpi_env = True
     bool_convert = {"True": "false", "False": "true"}
 '''
 bool_dict = {"on": True, "off": False}
-serial_socket = None
+recv_sockets = []
 cmd_socket = None
 # counter = 0
 
@@ -156,6 +156,7 @@ class STB:
             with open('serial_brain/serial_config.json') as json_file:
                 cfg = json.loads(json_file.read())
                 serial_port = cfg["serial_port"]
+                test_port = cfg["test_port"]
                 cmd_port = cfg["cmd_port"]
                 brain_tag = cfg["brain_tag"]
         except ValueError as e:
@@ -163,8 +164,9 @@ class STB:
             print(e)
             exit()
 
-        global serial_socket, cmd_socket
-        serial_socket = SocketClient('127.0.0.1', serial_port)
+        global recv_sockets, cmd_socket
+        # two sockets for the time being, one for injecting test strings, we may add other devices later per config
+        recv_sockets = [SocketClient('127.0.0.1', serial_port), SocketClient('127.0.0.1', test_port)]
         cmd_socket = SocketServer(cmd_port)
 
         for i, relay in enumerate(relays):
@@ -394,11 +396,12 @@ class STB:
                 self.__write_pcf(relay.relay_no, new_status)
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
-        ser_lines = serial_socket.read_buffer()
-        if ser_lines is not None:
-            ser_lines = reversed(ser_lines)
-            self.__filter(ser_lines)
-            self.__add_serial_lines(ser_lines)
+        for recv_socket in recv_sockets:
+            ser_lines = recv_socket.read_buffer()
+            if ser_lines is not None:
+                ser_lines = reversed(ser_lines)
+                self.__filter(ser_lines)
+                self.__add_serial_lines(ser_lines)
 
     def cleanup(self):
         self.GPIO.cleanup()
