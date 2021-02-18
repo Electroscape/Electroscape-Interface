@@ -68,5 +68,8 @@
     [ "CUBES", 26],
     [ "SECRET_DOOR", 27]
   ],
+  "Translation_Dict": {
+    "translate_this": "translate_that"
+  },
   "Serial_line_limit": 80
 }

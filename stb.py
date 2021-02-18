@@ -50,9 +50,10 @@ def brain_restart_thread(gpio, reset_pins):
 
 
 class Settings:
-    def __init__(self, room_name, serial_limit, brain_tag):
+    def __init__(self, room_name, translation_dict, serial_limit, brain_tag):
         self.room_name = room_name
         self.is_rpi_env = True
+        self.translation_dict = translation_dict
         self.serial_limit = serial_limit
         self.brain_tag = brain_tag
 
@@ -144,6 +145,7 @@ class STB:
                 room_name = cfg["Room_name"]
                 relays = cfg["Relays"]
                 brains = cfg["Brains"]
+                translation_dict = cfg["Translation_Dict"]
                 serial_limit = cfg["Serial_line_limit"]
         except ValueError as e:
             print('failure to read config.json')
@@ -172,7 +174,7 @@ class STB:
             brain, reset_pin = brain_data
             brains[i] = Brain(brain, relays, i, reset_pin)
 
-        settings = Settings(room_name, serial_limit, brain_tag)
+        settings = Settings(room_name, translation_dict, serial_limit, brain_tag)
         return settings, relays, brains
 
     def __pcf_init(self):
@@ -344,14 +346,12 @@ class STB:
                 continue
 
             for relay in self.relays:
+
                 if match(relay.code, source) is None:
                     continue
-
                 # if the riddle has been solved we no longer track it
                 if relay.riddle_status == "done":
                     continue
-
-                # if the riddle has been solved we no longer track it
                 if relay.riddle_status == "correct":
                     relay.riddle_status = "done"
                     continue
