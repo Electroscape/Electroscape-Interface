@@ -67,8 +67,13 @@ from flask_socketio import SocketIO, emit
 from re import split
 from werkzeug.utils import cached_property
 import sys
+import subprocess
+import atexit
 
 print("Current python environment is being ran from: {}".format(sys.prefix))
+
+rs485_socket = subprocess.Popen([sys.executable, "serial_brain/rs485_socket_server.py"])
+
 
 stb = STB()
 app = Flask('STB-Override')
@@ -170,7 +175,8 @@ def updater():
                 
             socketio.sleep(0.1)
     finally:
-        stb.cleanup()
+        shutdown()
+        exit()
 
 
 def heartbeat_pulse():
@@ -186,7 +192,14 @@ def heartbeat_pulse():
         socketio.sleep(1)
 
 
+def shutdown():
+    print("shutting down all processes")
+    stb.cleanup()
+    rs485_socket.kill()
+
+
 def main():
+    atexit.register(shutdown)
     socketio.run(app, debug=False, host='0.0.0.0')
     # app.run(debug=True)
 
