@@ -34,7 +34,7 @@ rpi_env = True
 '''
 bool_dict = {"on": True, "off": False}
 recv_sockets = []
-cmd_socket = None
+logger_socket = None
 # counter = 0
 
 
@@ -164,10 +164,10 @@ class STB:
             print(e)
             exit()
 
-        global recv_sockets, cmd_socket
+        global recv_sockets, logger_socket
         # two sockets for the time being, one for injecting test strings, we may add other devices later per config
         recv_sockets = [SocketClient('127.0.0.1', serial_port), SocketClient('127.0.0.1', test_port)]
-        cmd_socket = SocketServer(cmd_port)
+        logger_socket = SocketServer(cmd_port)
 
         for i, relay in enumerate(relays):
             relays[i] = Relay(i, **relay)
@@ -253,13 +253,13 @@ class STB:
         self.__log_action("User {} Relay {} from {} to {}".format(
             self.user, relay.name, not status, status))
         # takes the cake for the unsexiest variable
-        cmd_socket.transmit("!log: {}".format(
+        logger_socket.transmit("!log: {}".format(
             self.brains[relay.brain_association].name))
 
     def restart_all_brains(self, *_):
         txt = "\n\nroom has been reset by user {}\n\n".format(self.user)
         print(txt)
-        cmd_socket.transmit(txt)
+        logger_socket.transmit(txt)
 
         pins = []
         for brain in self.brains:
@@ -282,7 +282,7 @@ class STB:
         try:
             brain = self.brains[part_index]
             print("attempting to restart brain {}".format(brain.name))
-            cmd_socket.transmit("!log: {}".format(brain.name))
+            logger_socket.transmit("!log: {}".format(brain.name))
         except IndexError:
             print("Invalid brain selection on restart_brain: {}".format(part_index))
 
@@ -293,18 +293,18 @@ class STB:
         user = args[1]
         msg = "logging in user {}".format(user)
         print(msg)
-        cmd_socket.transmit("!login: {}".format(user))
+        logger_socket.transmit("!login: {}".format(user))
         self.user = user
 
     def __log_action(self, message):
         self.__add_serial_lines([message])
-        cmd_socket.transmit("!RPi,action," + message + ",Done.")
+        logger_socket.transmit("!RPi,action," + message + ",Done.")
 
     def set_admin_mode(self, *_):
         self.admin_mode = True
 
     def logout(self, *_):
-        cmd_socket.transmit("!logout: {} ".format(self.user))
+        logger_socket.transmit("!logout: {} ".format(self.user))
         self.user = False
         self.admin_mode = False
 
@@ -390,7 +390,7 @@ class STB:
                     if self.admin_mode or not relay.hidden:
                         self.__log_action(relay_msg)
                     else:
-                        cmd_socket.transmit(relay_msg)
+                        logger_socket.transmit(relay_msg)
                     self.updates.insert(
                         0, [relay.relay_no, relay.status_frontend, relay.riddle_status])
                 self.__write_pcf(relay.relay_no, new_status)
