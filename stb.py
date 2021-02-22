@@ -86,7 +86,7 @@ class Relay:
     def __init__(self, index, **kwargs):
         self.relay_no = kwargs.get('relay_num', -1)
         # Relay number is essential parameter
-        assert (0 <= self.relay_no <= 7) , "Relay number should be from 0 to 7"
+        assert (0 <= self.relay_no <= 7), "Relay number should be from 0 to 7"
         self.name = kwargs.get('name', "Extra")
         self.code = kwargs.get('code', "XX"+str(index))
         self.active_high = kwargs.get('active_high', True)

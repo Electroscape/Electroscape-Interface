@@ -12,7 +12,7 @@
     },
     {
       "relay_num": 1,
-      "name": "Fire place",
+      "name": "Fireplace",
       "code": "FPK",
       "brain_num": 2,
       "text_on": "OPEN",
