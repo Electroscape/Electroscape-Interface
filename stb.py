@@ -363,10 +363,12 @@ class STB:
                 if match(relay.code, source) is None:
                     continue
                 # We check the current status
+                if relay.riddle_status == "done":
+                    continue
                 if relay.riddle_status == "correct":
+                    relay.riddle_status = "done"
                     continue
 
-                relay.last_message = msg
                 relay.riddle_status = "unsolved"
                 self.riddles_updated = True
                 if match('!', msg) is None:
