@@ -9,6 +9,7 @@ from serial_brain.socketServer import SocketServer
 from time import sleep
 from threading import Thread
 from re import split, match, search
+# import copy
 
 # TODO:
 '''
@@ -286,8 +287,6 @@ class STB:
         except IndexError:
             print("Invalid brain selection on restart_brain: {}".format(part_index))
 
-        print()
-
     # *_ dumps unused variables
     def login(self, *args):
         user = args[1]
@@ -329,45 +328,59 @@ class STB:
             self.GPIO.output(brain.reset_pin, False)
     '''
 
+    def __msg_translate(self, msg):
+        try:
+            msg = self.settings.translation_dict[msg]
+        except KeyError:
+            pass
+        return msg
+
     # checks for keyworded messaged that contain updates to riddles and passes it on
     def __filter(self, lines):
-        for line in lines:
+        for index, line in enumerate(lines):
             # only evaluate complete messages
             if match(self.settings.brain_tag, line) is None:
+                print("no braintag, discarding")
                 continue
             if search("Done.*$", line) is None:
+                print("incomplete message, discarding")
                 continue
             try:
                 brain_name, source, msg, _ = split(",", line)
             except ValueError:
                 print("incomplete message, discarding following {}".format(line))
                 continue
+
             if match("sys", source.lower()) is not None:
                 # Brain is alive (Update ON box in frontend)
+                # TODO: currently does nothing finish feature @abbullah or discuss with me
+                # remove from the frontend aswell
                 _ = brain_name
+                # print("system message discarding")
                 continue
 
             for relay in self.relays:
-
                 if match(relay.code, source) is None:
                     continue
-                # if the riddle has been solved we no longer track it
-                if relay.riddle_status == "done":
-                    continue
+                # We check the current status
                 if relay.riddle_status == "correct":
-                    relay.riddle_status = "done"
                     continue
 
                 relay.last_message = msg
                 relay.riddle_status = "unsolved"
                 self.riddles_updated = True
                 if match('!', msg) is None:
-                    # if the password is reset on the arduino
+                    msg = self.__msg_translate(msg)
+                    relay.last_message = msg
+                    # if we translate, we translate for the frontend aswell
+                    lines[index] = msg
+                else:
+                    msg = msg.lower()[1:]
                     if msg.lower() == '!reset':
                         relay.last_message = relay.first_message
-                    # if !correct or !wrong
-                    else:
-                        relay.riddle_status = msg.lower()[1:]
+                        continue
+                    relay.riddle_status = msg
+        return lines
 
     def __add_serial_lines(self, lines):
         for line in lines:
@@ -397,10 +410,10 @@ class STB:
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
         for recv_socket in recv_sockets:
-            ser_lines = recv_socket.read_buffer()
-            if ser_lines is not None:
-                ser_lines = reversed(ser_lines)
-                self.__filter(ser_lines)
+            ser_lines = recv_socket.read_buffer()  # copy.deepcopy()
+            if ser_lines is not None and ser_lines:
+                ser_lines = self.__filter(ser_lines[::-1])  # basically a reverse
+                print("returned ser_lines: {}".format(ser_lines))
                 self.__add_serial_lines(ser_lines)
 
     def cleanup(self):
