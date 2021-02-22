@@ -1,162 +1,165 @@
 h2 {
     font-weight: bold;
-    font-size: 1.5em;
+    font-size  : 1.5em;
 }
+
 h3 {
     font-weight: bold;
-    font-size: 1em;
+    font-size  : 1em;
 }
+
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: rgb(30,30,30);
-    color: #E6C846;
-    padding: 20px 20px;
+    font-family     : 'Montserrat', sans-serif;
+    background-color: rgb(30, 30, 30);
+    color           : #E6C846;
+    padding         : 20px 20px;
 }
 
 .relays_table {
-    width: 100%;
-    max-width: 900px;
-    padding: 0px 15px;
+    width          : 100%;
+    max-width      : 900px;
+    padding        : 0px 15px;
     border-collapse: separate;
 }
 
-.relay_title{
-    font-size: 16pt;
-    padding-top: 0.5em;
+.relay_title {
+    font-size     : 16pt;
+    padding-top   : 0.5em;
     padding-bottom: 0.1em;
 }
 
-.relay_status{
+.relay_status {
     background-color: black;
-    color: white;
-    padding: 10px;
-    margin: 10px 50px 10px 10px;
-    text-align: center;
-    border-style: solid;
-    border-color: #555;
+    color           : white;
+    padding         : 10px;
+    margin          : 10px 50px 10px 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : #555;
 }
 
-.riddle_input{
+.riddle_input {
     background-color: black;
-    color: white;
-    padding: 10px;
-    margin: 10px 50px 10px 10px;
-    text-align: center;
-    border-style: solid;
-    border-color: #555;
+    color           : white;
+    padding         : 10px;
+    margin          : 10px 50px 10px 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : #555;
 }
 
-.ON_Box{
+.ON_Box {
     background-color: black;
-    color: white;
-    padding: 10px;
-    margin: 10px 50px 10px 10px;
-    text-align: center;
-    border-style: solid;
-    border-color: green;
-    width: 25%;
+    color           : white;
+    padding         : 10px;
+    margin          : 10px 50px 10px 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : green;
+    width           : 25%;
 }
 
 .header_box {
     background-color: black;
-    color: white;
-    padding: 10px;
-    margin: 10px 50px 10px 10px;
-    text-align: center;
-    border-style: solid;
-    border-color: green; 
+    color           : white;
+    padding         : 10px;
+    margin          : 10px 50px 10px 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : green;
 }
 
-td, th {
+td,
+th {
     border-spacing: 0px 15px;
-    padding: 0px 5px;
+    padding       : 0px 5px;
 }
 
 div.log {
-    width: 900px;
+    width     : 900px;
     max-height: 300px;
-    overflow: auto;
-    padding: 0px 30px;
+    overflow  : auto;
+    padding   : 0px 30px;
 }
 
 div.topnav {
-    width: 100%;
-    overflow: hidden;
-    margin-top: 0;
-    margin-left: 0;
+    width              : 100%;
+    overflow           : hidden;
+    margin-top         : 0;
+    margin-left        : 0;
     /* background-color: rgb(30,30,30); */
-    font-size: 2.5em;
-    margin: auto;
-    font-weight: bold;
-    padding: 0px 30px;
+    font-size          : 2.5em;
+    margin             : auto;
+    font-weight        : bold;
+    padding            : 0px 30px;
 }
 
-.left{
-    font-size: 0.75em;
-    display: table-cell;
+.left {
+    font-size     : 0.75em;
+    display       : table-cell;
     vertical-align: middle;
 }
 
 .right {
     font-size: 0.75em;
-    float: right;
+    float    : right;
 }
 
 .dropdown {
-    padding: 0px 15px;
-    position: relative;
+    padding         : 0px 15px;
+    position        : relative;
     background-color: #E6C846;
-    color: black;
+    color           : black;
 }
 
 .dropdown-content {
-    font-weight: normal;
-    display: none;
-    position: relative;
+    font-weight     : normal;
+    display         : none;
+    position        : relative;
     background-color: #E6C846;
 }
 
 .dropdown:hover .dropdown-content {
     font-weight: normal;
-    display: block;
+    display    : block;
 }
 
 button {
     background-color: #555;
-    font-weight: bold;
-    color: black;
-    padding: 10px 30px;
-    width: 100%;
-    transition: all .23s ease;
+    font-weight     : bold;
+    color           : black;
+    padding         : 10px 30px;
+    width           : 100%;
+    transition      : all .23s ease;
 }
 
-button:hover{
-    color: white;
+button:hover {
+    color           : white;
     background-color: transparent;
-    opacity: 80%;
+    opacity         : 80%;
 }
 
 .button-wrapper {
-    text-align:center;
+    text-align : center;
     font-weight: normal;
-    display:inline-block;
+    display    : inline-block;
 }
 
-.button-wrapper p{
-    font-size: 12pt;
+.button-wrapper p {
+    font-size  : 12pt;
     font-weight: normal;
 }
 
-.button-wrapper button{
-    width: 100%;
+.button-wrapper button {
+    width      : 100%;
     font-weight: normal;
 }
 
 div.relay_box {
-    background-color: rgb(30,30,30);
-    display: inline;
-    padding: 0px 30px;
-    margin: 10px;
+    background-color: rgb(30, 30, 30);
+    display         : inline;
+    padding         : 0px 30px;
+    margin          : 10px;
 }
 
 div.brain_restarts {
@@ -164,13 +167,13 @@ div.brain_restarts {
 }
 
 span.brain_box {
-    background-color: rgb(30,30,30);
-    display: inline;
-    padding: 0px 30px;
-    margin: 10px;
+    background-color: rgb(30, 30, 30);
+    display         : inline;
+    padding         : 0px 30px;
+    margin          : 10px;
 }
 
 input[type="checkbox"] {
     vertical-align: middle;
-    padding-left: 15px
+    padding-left  : 15px
 }

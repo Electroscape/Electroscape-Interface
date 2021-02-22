@@ -14,13 +14,13 @@
     <link href="{{ url_for('static', filename='css/login_css.css') }}" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <script src="{{url_for('static', filename='js/users.js')}}"></script>
-    <script src="{{url_for('static', filename='js/blacklist.js')}}"></script>
+    <script src="{{url_for('static', filename='js/denylist.js')}}"></script>
     <script type="text/javascript">
-      function blacklist_check(){
+      function denylist_check(){
        const lbl_name = document.getElementById("name");
        const btn = document.getElementById("btn_login");
        var username = lbl_name.value;
-       var result = blacklist.filter(user => user.toUpperCase() == username.toUpperCase());
+       var result = denylist.filter(user => user.toUpperCase() == username.toUpperCase());
        console.log(result);
        if (result.length){
           btn.value = 'NO USER FOUND';
@@ -39,7 +39,7 @@
 <body>
     <div><h2>STB-Pi-Interface {{ room_name }}</h2></div>
     <div style="margin: 50px;">
-        <form autocomplete="off" method="POST" action="" onsubmit="return blacklist_check();">
+        <form autocomplete="off" method="POST" action="" onsubmit="return denylist_check();">
             <div class="flex-contianter group">
               <div class="ON_Box" style="flex: 2;">
                 ON
