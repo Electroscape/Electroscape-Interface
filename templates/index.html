@@ -42,20 +42,27 @@
             socket.emit('serial_buffer_request');
 
             socket.on('relay_update', function (data, cb) {
-                var status_buttons = document.getElementsByClassName("status")
+                var status_buttons = document.getElementsByClassName("relay_status");
+
                 data.updates.forEach(function (relay_data) {
                     console.log("relay " + relay_data[0] + " has been updated to " + relay_data[1]);
-                    if (status_buttons[relay_data[0]] != null) {
-                        status_buttons[relay_data[0]].innerHTML = relay_data[1];
-                        status_buttons[relay_data[0]].style.backgroundColor = relay_data[2];
+                    elem = document.getElementById("status_" + relay_data[0]);
+                    if (elem != null) {
+                        elem.innerHTML = relay_data[1];
+                        if (relay_data[2] != relay_data[1]) {
+                            elem.style.borderColor = "green";
+                        } else {
+                            elem.style.borderColor = "#555";
+                        }
                     }
                 });
 
                 $('#debug_log').append('<br>' + $('<div/>').text('Received stuff').html());
-                // I wonder if i can use CB instead to just reload... for quick'n'dirty
 
-                if (cb)
-                    cb();
+                // TODO ask @Martin what is cb?!
+                // I wonder if i can use CB instead to just reload... for quick'n'dirty
+                //if (cb)
+                //    cb();
             });
 
             function print_debugger(line) {
@@ -88,23 +95,16 @@
                 canv = document.getElementById("fireworks_canvas");
                 canv.style.display = "inline-block";
                 setTimeout(function () { canv.style.display = "none" }, 3000);
-                stat = document.getElementById("status_" + relay.code);
-                stat.style.borderColor = "green";
                 inp = document.getElementById("input_" + relay.code);
                 inp.style.borderColor = "green";
             }
 
             function riddle_wrong_solution(relay) {
-                stat = document.getElementById("status_" + relay.code);
-                stat.style.borderColor = "red";
                 inp = document.getElementById("input_" + relay.code);
                 inp.style.borderColor = "red";
-                inp.innerHTML = "WRONG SOLUTION";
             }
 
             function riddle_normal_display(relay) {
-                stat = document.getElementById("status_" + relay.code);
-                stat.style.borderColor = "#555";
                 inp = document.getElementById("input_" + relay.code);
                 inp.style.borderColor = "#555";
                 inp = document.getElementById("input_" + relay.code);
@@ -117,6 +117,9 @@
                 [].forEach.call(elems, function (elm) {
                     for (let rel of relays.relays) {
                         if (elm.id == "input_" + rel.code) {
+                            if (rel.riddle_status == 'done')
+                                continue
+
                             if (rel.riddle_status == 'correct') {
                                 riddle_correct_solution(rel)
                             } else if (rel.riddle_status == 'wrong') {
@@ -200,9 +203,9 @@
                 <th scope="col" style="padding: 50px 50px 0px 50px;">Override</th>
             </tr>
             {% for relay in relays %}
-                {% if not relay.hidden or username.lower() == "admin" %}
-                    {% include '_relay.html' %}
-                {% endif %}
+            {% if not relay.hidden or username.lower() == "admin" %}
+            {% include '_relay.html' %}
+            {% endif %}
             {% endfor %}
         </table>
     </div>

@@ -19,28 +19,29 @@
       "text_off": "CLOSED"
     },
     {
-      "relay_num": 2,
+      "relay_num": 3,
       "name": "Safe",
       "code": "HID",
       "brain_num": 3,
+      "active_high": false,
       "text_on": "VISIBLE",
       "text_off": "HIDDEN"
     },
     {
-      "relay_num": 3,
+      "relay_num": 4,
       "name": "UV Light",
       "code": "UVL",
       "brain_num": 4
     },
     {
-      "relay_num": 4,
+      "relay_num": 6,
       "name": "Alarm",
       "code": "ALA",
       "brain_num": 1,
       "first_message": "COMPASS IN SAFE"
     },
     {
-      "relay_num": 5,
+      "relay_num": 7,
       "name": "Exit",
       "code": "EXT",
       "brain_num": 1,
@@ -48,18 +49,18 @@
       "text_off": "CLOSED"
     },
     {
-      "relay_num": 6,
+      "relay_num": 2,
       "name": "Extra_1",
       "code": "XX1",
       "hidden": true,
       "brain_num": -1
     },
     {
-      "relay_num": 7,
-      "name": "Extra_2",
-      "code": "XX2",
+      "relay_num": 5,
+      "name": "Light 2nd Room",
+      "code": "LI2",
       "hidden": true,
-      "brain_num": -1
+      "brain_num": 4
     }
   ],
   "Brains": [

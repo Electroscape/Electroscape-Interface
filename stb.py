@@ -1,15 +1,12 @@
 # Author Martin Pek
 # 2CP - TeamEscape - Engineering
 
-# from random import random
 import json
-# from datetime import datetime as dt
 from serial_brain.socket_client import SocketClient
 from serial_brain.socketServer import SocketServer
 from time import sleep
 from threading import Thread
 from re import split, match, search
-# import copy
 
 # TODO:
 '''
@@ -74,10 +71,10 @@ class Relay:
 
     def __set_frontend_status(self):
         print("setting status for frontend for relay {}".format(self.name))
-        if self.status:
-            self.status_frontend = self.text_on
-        else:
+        if self.status and self.active_high:
             self.status_frontend = self.text_off
+        else:
+            self.status_frontend = self.text_on
 
     def set_status(self, status):
         self.status = status
@@ -167,7 +164,8 @@ class STB:
 
         global recv_sockets, logger_socket
         # two sockets for the time being, one for injecting test strings, we may add other devices later per config
-        recv_sockets = [SocketClient('127.0.0.1', serial_port), SocketClient('127.0.0.1', test_port)]
+        recv_sockets = [SocketClient(
+            '127.0.0.1', serial_port), SocketClient('127.0.0.1', test_port)]
         logger_socket = SocketServer(cmd_port)
 
         for i, relay in enumerate(relays):
@@ -177,7 +175,8 @@ class STB:
             brain, reset_pin = brain_data
             brains[i] = Brain(brain, relays, i, reset_pin)
 
-        settings = Settings(room_name, translation_dict, serial_limit, brain_tag)
+        settings = Settings(room_name, translation_dict,
+                            serial_limit, brain_tag)
         return settings, relays, brains
 
     def __pcf_init(self):
@@ -346,7 +345,7 @@ class STB:
                 print("incomplete message, discarding")
                 continue
             try:
-                brain_name, source, msg, _ = split(",", line)
+                _, source, msg, _ = split(",", line)
             except ValueError:
                 print("incomplete message, discarding following {}".format(line))
                 continue
@@ -354,10 +353,11 @@ class STB:
             if match("sys", source.lower()) is not None:
                 # Brain is alive (Update ON box in frontend)
                 # TODO: currently does nothing finish feature @abbullah or discuss with me
-                # remove from the frontend aswell
-                _ = brain_name
-                # print("system message discarding")
-                continue
+                # Brain restarted
+                if search("setup", msg.lower()):
+                    relay.riddle_status = "unsolved"
+                    continue
+
 
             for relay in self.relays:
                 if match(relay.code, source) is None:
@@ -365,12 +365,18 @@ class STB:
                 # We check the current status
                 if relay.riddle_status == "done":
                     continue
+
                 if relay.riddle_status == "correct":
                     relay.riddle_status = "done"
                     continue
 
                 relay.riddle_status = "unsolved"
                 self.riddles_updated = True
+
+                # when message is empty put first message
+                if not bool(msg):
+                    msg = relay.first_message
+
                 if match('!', msg) is None:
                     msg = self.__msg_translate(msg)
                     relay.last_message = msg
@@ -400,21 +406,22 @@ class STB:
                 new_status = self.__read_pcf(relay.relay_no)
                 if new_status != relay.status:
                     relay.set_status(new_status)
-                    relay_msg = "Relay {} switched to {} by Brain".format(
-                        relay.code, relay.status)
+                    relay_msg = "Relay {} no {} switched to {} by Brain".format(
+                        relay.code, relay.relay_no, relay.status)
                     if self.admin_mode or not relay.hidden:
                         self.__log_action(relay_msg)
                     else:
                         logger_socket.transmit(relay_msg)
                     self.updates.insert(
-                        0, [relay.relay_no, relay.status_frontend, relay.riddle_status])
+                        0, [relay.code, relay.status_frontend, relay.text_on])
                 self.__write_pcf(relay.relay_no, new_status)
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
         for recv_socket in recv_sockets:
             ser_lines = recv_socket.read_buffer()  # copy.deepcopy()
             if ser_lines is not None and ser_lines:
-                ser_lines = self.__filter(ser_lines[::-1])  # basically a reverse
+                ser_lines = self.__filter(
+                    ser_lines[::-1])  # basically a reverse
                 print("returned ser_lines: {}".format(ser_lines))
                 self.__add_serial_lines(ser_lines)
 
