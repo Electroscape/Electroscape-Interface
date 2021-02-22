@@ -174,7 +174,11 @@ def updater():
                 stb.riddles_updated = False
                 
             socketio.sleep(0.1)
+    except Exception as exp:
+        # TODO: check feasibility of a restart of the STB class
+        print(exp)
     finally:
+        print("STB updater failed!")
         shutdown()
         exit()
 
