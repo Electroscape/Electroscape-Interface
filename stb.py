@@ -328,11 +328,15 @@ class STB:
     '''
 
     def __msg_translate(self, msg):
-        try:
-            msg = self.settings.translation_dict[msg]
-        except KeyError:
-            pass
-        return msg
+        result = ""
+        for word in msg.split():
+            try:
+                word = self.settings.translation_dict[word]
+            except KeyError:
+                pass
+            result = result + word + " "
+        result = result.rstrip()
+        return result
 
     # checks for keyworded messaged that contain updates to riddles and passes it on
     def __filter(self, lines):
@@ -357,7 +361,6 @@ class STB:
                 if search("setup", msg.lower()):
                     relay.riddle_status = "unsolved"
                     continue
-
 
             for relay in self.relays:
                 if match(relay.code, source) is None:

@@ -10,7 +10,7 @@
 # !BrLight,LIT,!Reset,Done.
 # !BrCUBE,SYS,refresh,Done.
 # !BrLight,SYS,Setup done,Done.
-# !BrCUBE,UVL,translate_this,Done.
+# !BrCUBE,UVL,translate_this translate_this,Done.
 
 from socketServer import SocketServer
 import json
