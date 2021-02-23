@@ -21,6 +21,7 @@ class SocketClient:
             print("client has connected to {}:{}".format(self.ip, self.port))
         except socket.error as msg:
             self.s.close()
+            print(msg)
             return False
         return True
 

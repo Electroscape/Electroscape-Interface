@@ -83,9 +83,6 @@ def connect_serial():
         sleep(0.5)
 
 
-sock = SocketServer(socket_port)
-
-
 def main():
     print('Activate RS485 (Read only) on Pi')
     try:
@@ -98,7 +95,6 @@ def main():
         GPIO.cleanup()
 
 
-main()
-
-
-
+if __name__ == "__main__":
+    sock = SocketServer(socket_port)
+    main()
