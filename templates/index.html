@@ -42,27 +42,17 @@
             socket.emit('serial_buffer_request');
 
             socket.on('relay_update', function (data, cb) {
-                var status_buttons = document.getElementsByClassName("relay_status");
-
                 data.updates.forEach(function (relay_data) {
                     console.log("relay " + relay_data[0] + " has been updated to " + relay_data[1]);
-                    elem = document.getElementById("status_" + relay_data[0]);
-                    if (elem != null) {
-                        elem.innerHTML = relay_data[1];
-                        if (relay_data[2] != relay_data[1]) {
-                            elem.style.borderColor = "green";
-                        } else {
-                            elem.style.borderColor = "#555";
-                        }
+                    var status = document.getElementById("status_" + relay_data[0]);
+                    if (status != null) {
+                        console.log("status found: " + status.id)
+                        status.innerHTML = relay_data[1];
                     }
                 });
 
-                $('#debug_log').append('<br>' + $('<div/>').text('Received stuff').html());
-
                 // TODO ask @Martin what is cb?!
-                // I wonder if i can use CB instead to just reload... for quick'n'dirty
-                //if (cb)
-                //    cb();
+                // @Abdullah Callback, a function called after the code has been executed to respond
             });
 
             function print_debugger(line) {
@@ -203,9 +193,9 @@
                 <th scope="col" style="padding: 50px 50px 0px 50px;">Override</th>
             </tr>
             {% for relay in relays %}
-            {% if not relay.hidden or username.lower() == "admin" %}
-            {% include '_relay.html' %}
-            {% endif %}
+                {% if not relay.hidden or username.lower() == "admin" %}
+                    {% include '_relay.html' %}
+                {% endif %}
             {% endfor %}
         </table>
     </div>
