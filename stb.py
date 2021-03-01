@@ -163,8 +163,8 @@ class STB:
 
         global recv_sockets, logger_socket
         # First socket Arduino on RS485, the next one is for injecting test strings from test_socket
-        recv_sockets = [SocketClient(
-            '127.0.0.1', serial_port), SocketClient('127.0.0.1', test_port)]
+        recv_sockets = [SocketClient('127.0.0.1', serial_port), 
+                        SocketClient('127.0.0.1', test_port, trials=5)]
         logger_socket = SocketServer(cmd_port)
 
         for i, relay in enumerate(relays):
@@ -356,7 +356,7 @@ class STB:
 
             if match("sys", source.lower()) is not None:
                 # Brain is alive (Update ON box in frontend)
-                # TODO: currently does nothing finish feature @abbullah or discuss with me
+                # TODO: currently does nothing finish feature @abdullah or discuss with me
                 # Brain restarted
                 if search("setup", msg.lower()):
                     relay.riddle_status = "unsolved"

@@ -81,6 +81,7 @@ app = Flask('STB-Override')
 async_mode = None
 socketio = SocketIO(app, async_mode=async_mode)
 stb_thread = None
+hearbeat_thread = None
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -133,12 +134,12 @@ def interpreter(immutable):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    global stb_thread
+    global stb_thread, hearbeat_thread
     room_name = stb.settings.room_name
     if stb_thread is None:
         stb_thread = socketio.start_background_task(updater)
-
-    socketio.start_background_task(heartbeat_pulse)
+    if hearbeat_thread is None:
+        hearbeat_thread = socketio.start_background_task(heartbeat_pulse)
 
     if request.method == 'POST':
         print("post returned: {}".format(request.form))

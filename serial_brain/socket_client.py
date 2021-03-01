@@ -7,10 +7,15 @@ from threading import Thread
 
 
 class SocketClient:
-    def __init__(self, ip, port, timeout=None):
+    # trials to create a client (0 or less will try forever,
+    #                            1 will not connect at all 
+    #                            2 or more will try trials -1 times)
+    def __init__(self, ip, port, timeout=None, trials=0):
         self.ip = ip
         self.port = port
         self.timeout = timeout
+        self.trials = trials
+        self.successful = False
         self.buffer = []
         thread = Thread(target=self.__run_socket_client)
         thread.start()
@@ -40,15 +45,23 @@ class SocketClient:
 
     def __run_socket_client(self):
         while True:
+            self.successful = False
             s = socket.socket()
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.settimeout(self.timeout)
             self.s = s
             while True:
+                if self.trials == 1:
+                    return
+
                 print('socket client looking for connection')
                 if not self.__connect():
                     sleep(1)
+                    self.trials -= 1
                     break
+
+                # Successful connection between server and client
+                self.successful = True
                 while self.__received():
                     pass
 
