@@ -82,7 +82,6 @@ class Relay:
 
     def __init__(self, index, **kwargs):
         self.relay_no = kwargs.get('relay_num', -1)
-        # Relay number is essential parameter
         assert (0 <= self.relay_no <= 7), "Relay number should be from 0 to 7"
         self.name = kwargs.get('name', "Extra")
         self.code = kwargs.get('code', "XX"+str(index))
@@ -163,7 +162,7 @@ class STB:
             exit()
 
         global recv_sockets, logger_socket
-        # two sockets for the time being, one for injecting test strings, we may add other devices later per config
+        # First socket Arduino on RS485, the next one is for injecting test strings from test_socket
         recv_sockets = [SocketClient(
             '127.0.0.1', serial_port), SocketClient('127.0.0.1', test_port)]
         logger_socket = SocketServer(cmd_port)
@@ -193,7 +192,7 @@ class STB:
             pin = relay.relay_no
             self.__read_pcf(pin)
             try:
-                self.pcf_write.port[pin]
+                relay.set_status(self.pcf_write.port[pin])
             except IOError:
                 self.error = "Error with write PCF"
 
@@ -208,7 +207,7 @@ class STB:
         try:
             ret = bool(self.pcf_read.port[pin])
         except IOError:
-            self.error = "Error with write PCF"
+            self.error = "Error with read PCF"
         return ret
 
     def __gpio_init(self):
