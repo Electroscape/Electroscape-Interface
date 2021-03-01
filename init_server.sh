@@ -1,5 +1,3 @@
-cd serial_brain
-python3 rs485_socket_server.py&
-cd ..
+python3 serial_brain/test_socket.py&
 sleep 3
 python3 app.py&

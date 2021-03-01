@@ -225,7 +225,8 @@ class STB:
             print(e)
             print("sth went terribly wrong with GPIO import")
             exit()
-
+            
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         for brain in self.brains:
             GPIO.setup(brain.reset_pin, GPIO.OUT, initial=False)

@@ -13,16 +13,20 @@
 # !BrCUBE,UVL,translate_this translate_this,Done.
 
 from socketServer import SocketServer
+from pathlib import Path
 import json
 
-try:
-    with open('serial_config.json') as json_file:
-        cfg = json.loads(json_file.read())
-        socket_port = cfg["test_port"]
-except ValueError as e:
-    print('failure to read serial_config.json')
-    print(e)
-    exit()
+
+for file_name in ['serial_brain/serial_config.json', 'serial_config.json']:
+    if Path(file_name).is_file():
+        try:
+            with open(file_name) as json_file:
+                cfg = json.loads(json_file.read())
+                socket_port = cfg["test_port"]
+        except ValueError as e:
+            print('failure to read serial_config.json')
+            print(e)
+            exit()
 
 
 def main():
@@ -38,6 +42,3 @@ def main():
 
 
 main()
-
-
-
