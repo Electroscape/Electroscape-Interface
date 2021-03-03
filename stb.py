@@ -71,7 +71,7 @@ class Relay:
 
     def __set_frontend_status(self):
         print("setting status for frontend for relay {}".format(self.name))
-        if self.status and self.active_high:
+        if self.status == self.active_high:
             self.status_frontend = self.text_off
         else:
             self.status_frontend = self.text_on
@@ -91,6 +91,7 @@ class Relay:
         self.auto = kwargs.get('auto', True)
         self.text_on = kwargs.get('text_on', "ON")
         self.text_off = kwargs.get('text_off', "OFF")
+        self.answer = kwargs.get('answer', "N/A")
         self.auto_frontend = "true"
         # this just is a function used to set the frontend to the same as backend,
         # just here to init the latter
@@ -206,15 +207,18 @@ class STB:
             sleep(1)  # wait to avoid IO Error and try again
             self.__write_pcf(pin, value)
 
-    def __read_pcf(self, relay):
+    def __read_pcf(self, relay, read_write_pcf=False):
         ret = relay.status
         pin = relay.relay_no
         try:
-            ret = bool(self.pcf_read.port[pin])
+            if read_write_pcf:
+                ret = bool(self.pcf_write.port[pin])
+            else:
+                ret = bool(self.pcf_read.port[pin])
         except IOError:
             self.error = "Error with read PCF"
             sleep(1)  # wait to avoid IO Error and try again
-            self.__read_pcf(relay)
+            self.__read_pcf(relay, read_write_pcf)
         return ret
 
     def __gpio_init(self):
@@ -238,18 +242,18 @@ class STB:
             GPIO.setup(brain.reset_pin, GPIO.OUT, initial=False)
         return GPIO
 
-    def set_override(self, relay_code, value, test):
+    def set_override(self, relay_code, value):
         # do yourself a favour and don't pass values into html merely JS,
         # converting bools into 3 different languages smeared into json is not fun
         # function only flips existing variable
         # Relay codes should be key parameter
         relay = [r for r in self.relays if r.code == relay_code][0]
-        relay.set_auto(not relay.auto)
+        relay.set_auto(value)
         self.__log_action("{} relay {} auto {}".format(
-            self.user, relay.relay_no, relay.auto))
+            self.user, relay.code, relay.auto))
 
     # changes from the frontend applied to the GPIO pins
-    def set_relay(self, relay_code, status=None, test=None):
+    def override_relay(self, relay_code, status=None, test=None):
         print("set_relay vars {} {} {}".format(relay_code, status, test))
         # Relay codes should be key parameter
         relay = [r for r in self.relays if r.code == relay_code][0]
@@ -432,6 +436,15 @@ class STB:
                         0, [relay.code, relay.status_frontend, relay.riddle_status])
 
                 self.__write_pcf(relay.relay_no, new_status)
+            # if not auto display the write_pcf status
+            else:
+                new_status = self.__read_pcf(relay, read_write_pcf=True)
+                if new_status != relay.status:
+                    print("Relay {} is manual on {}".format(
+                        relay.code, relay.status))
+                    relay.set_status(new_status)
+                    self.updates.insert(
+                        0, [relay.code, relay.status_frontend, relay.riddle_status])
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
         for recv_socket in recv_sockets:

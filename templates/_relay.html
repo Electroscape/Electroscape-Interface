@@ -8,23 +8,42 @@
         </div> 
     </th>
     <td>
+        <div class="riddle_solution" id="solution_{{relay.code}}">
+            {{relay.answer}}
+        </div>
         <div class="riddle_input" id="input_{{relay.code}}">
             {{relay.last_message}}
         </div> 
     </td>
     <td>
-        <form method="POST" action="" onsubmit="return override_press();">
-            <button class="btn_override"
+        <form method="POST" action="" id="form_{{relay.code}}">
+            <button
+                type="submit"
+                class="btn_override"
                 id="btn_{{relay.code}}"
-                onClick="override_relay('{{relay}}', 'click')"
+                name="relayOverride_{{relay.code}}"
             >Override</button>
         </form>
     </td>
 
+    <!-- Handle override press-->
     <script>
-        function override_press() {
-            console.log("override submit to backend");
-            return true;
-        }
+        $('#form_{{relay.code}}').submit( function(e) { 
+            //prevent submit
+            e.preventDefault();
+         
+            //do things on submit
+            $.ajax({
+                data: "relayOverride_{{relay.code}}",
+                type: "POST",
+                beforeSend: function(){
+                 //before send data
+                },
+                success: function(){
+                    // the data
+                    console.log("post {{relay.code}} override successfully");
+                }
+            });
+          });      
     </script>
 </tr>

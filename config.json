@@ -8,6 +8,7 @@
       "active_high": true,
       "auto": true,
       "hidden": false,
+      "answer": "1704",
       "brain_num": 1
     },
     {
@@ -15,6 +16,7 @@
       "name": "Fireplace",
       "code": "FPK",
       "brain_num": 2,
+      "answer": "1234",
       "text_on": "OPEN",
       "text_off": "CLOSED"
     },
@@ -24,6 +26,7 @@
       "code": "HID",
       "brain_num": 3,
       "active_high": false,
+      "answer": "RGWB",
       "text_on": "VISIBLE",
       "text_off": "HIDDEN"
     },
@@ -31,6 +34,7 @@
       "relay_num": 2,
       "name": "UV Light",
       "code": "UVL",
+      "answer": "C1 C2 C3",
       "brain_num": 4
     },
     {
@@ -38,6 +42,7 @@
       "name": "Alarm",
       "code": "ALA",
       "brain_num": 1,
+      "answer": "N/A",
       "first_message": "COMPASS IN SAFE"
     },
     {
@@ -45,6 +50,7 @@
       "name": "Exit",
       "code": "EXT",
       "brain_num": 1,
+      "answer": "8231984",
       "text_on": "OPEN",
       "text_off": "CLOSED"
     },
@@ -52,6 +58,7 @@
       "relay_num": 4,
       "name": "Extra_1",
       "code": "XX1",
+      "answer": "N/A",
       "hidden": true,
       "brain_num": -1
     },
@@ -59,6 +66,7 @@
       "relay_num": 1,
       "name": "Light 2nd Room",
       "code": "LI2",
+      "answer": "N/A",
       "hidden": true,
       "brain_num": 4
     }

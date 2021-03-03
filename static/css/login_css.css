@@ -1,12 +1,13 @@
 .group {
   display    : flex;
   align-items: center;
-  width      : 60%;
+  width      : 100%;
+  max-width  : 900px;
 }
 
 .group input[type="submit"] {
-  width        : 25%;
-  margin-inline: 10px 0px;
+  width : 25%;
+  margin: 10px;
 }
 
 #name {
@@ -23,7 +24,6 @@
   color           : white;
   font-size       : 14px;
   height          : 35px;
-  margin-top      : 5px;
   padding         : 0 8px;
   background-color: black;
   transition      : all .23s ease;
@@ -52,7 +52,7 @@ input[type="submit"][disabled] {
   /*the container must be positioned relative:*/
   position: relative;
   display : inline-block;
-  margin  : 10px 50px 10px 10px;
+  margin  : 10px;
 }
 
 .autocomplete-items {

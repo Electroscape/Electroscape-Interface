@@ -47,7 +47,7 @@ the interpreter wont need to run exceptions
 
 
 - Verify double post of hidden elements is not causing problems?
-post returned: ImmutableMultiDict([('relayOverride_0', 'on'), ('relayOverride_0', '')])
+post returned: ImmutableMultiDict([('relayOverride_XXX'), ('relayOverride_XXX')])
 Answer to that: a dict with duplicate keys will return only the key once with for key in test_dict.keys():
 as well as return the value of the last key duplicate so for our application we're fine since i do
 all the work backend so far, if that changes we know how to do deal with duplicates.
@@ -64,7 +64,7 @@ from stb import STB
 from flask import Flask, render_template, request
 from threading import Thread, Timer
 from flask_socketio import SocketIO, emit
-from re import split
+from re import split, match
 from werkzeug.utils import cached_property
 import sys
 import subprocess
@@ -72,7 +72,8 @@ import atexit
 
 print("Current python environment is being ran from: {}".format(sys.prefix))
 
-rs485_socket = subprocess.Popen([sys.executable, "serial_brain/rs485_socket_server.py"])
+rs485_socket = subprocess.Popen(
+    [sys.executable, "serial_brain/rs485_socket_server.py"])
 
 
 stb = STB()
@@ -99,8 +100,7 @@ def serial_buffer_request():
 def interpreter(immutable):
     form_dict = immutable.to_dict()
     action_dict = {
-        "relayOverride": stb.set_override,
-        "relaySetStatus": stb.set_relay,
+        "relayOverride": stb.override_relay,
         "reset_room": stb.restart_all_brains,
         "login": stb.login,
         "extend_relays": stb.set_admin_mode,
@@ -116,6 +116,12 @@ def interpreter(immutable):
             action = key
             part_index = None
         print("action is {}".format(action))
+
+        # set auto to false
+        if match("relayOverride", action):
+            action, part_index = split("_", key)
+            stb.set_override(part_index, False)
+
         # careful with the functions they values
         # passed are all strings since it comes from jsons
         # TODO: define how we pass stuff with abdullah, this could limit us in the future
@@ -125,11 +131,6 @@ def interpreter(immutable):
             # TODO: pass this error to the frontend
             print("We got a keyerror")
             print(key_e)
-
-    '''
-    if action == "relayOverride":
-        stb.set_override(part_index, value)
-    '''
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -163,17 +164,20 @@ def updater():
             if len(stb.updates) > 0:
                 print("STB relays have updated with {}".format(stb.updates))
                 # https://stackoverflow.com/questions/18478287/making-object-json-serializable-with-regular-encoder/18561055
-                socketio.emit('relay_update', {'updates': stb.updates}, namespace='/test', broadcast=True)
+                socketio.emit('relay_update', {
+                              'updates': stb.updates}, namespace='/test', broadcast=True)
                 stb.updates = []
 
             if len(stb.serial_updates) > 0:
-                socketio.emit('serial_update', {'lines': stb.serial_updates}, namespace='/test', broadcast=True)
+                socketio.emit('serial_update', {
+                              'lines': stb.serial_updates}, namespace='/test', broadcast=True)
                 stb.serial_updates = []
 
             if stb.riddles_updated:
-                socketio.emit('riddles_updated', {'relays': stb.relays_to_dict()}, namespace='/test', broadcast=True)
+                socketio.emit('riddles_updated', {
+                              'relays': stb.relays_to_dict()}, namespace='/test', broadcast=True)
                 stb.riddles_updated = False
-                
+
             socketio.sleep(0.1)
     except Exception as exp:
         # TODO: check feasibility of a restart of the STB class

@@ -32,7 +32,7 @@ body {
     background-color: black;
     color           : white;
     padding         : 10px;
-    margin          : 10px 50px 10px 10px;
+    margin          : 10px;
     text-align      : center;
     border-style    : solid;
     border-color    : #555;
@@ -42,17 +42,30 @@ body {
     background-color: black;
     color           : white;
     padding         : 10px;
-    margin          : 10px 50px 10px 10px;
+    margin          : 10px;
     text-align      : center;
     border-style    : solid;
     border-color    : #555;
+}
+
+.riddle_solution {
+    position        : absolute;
+    opacity         : 50%;
+    background-color: black;
+    color           : white;
+    padding         : 10px;
+    margin          : 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : #555;
+    min-width       : 80px;
 }
 
 .ON_Box {
     background-color: black;
     color           : white;
     padding         : 10px;
-    margin          : 10px 50px 10px 10px;
+    margin          : 10px;
     text-align      : center;
     border-style    : solid;
     border-color    : green;
@@ -63,7 +76,7 @@ body {
     background-color: black;
     color           : white;
     padding         : 10px;
-    margin          : 10px 50px 10px 10px;
+    margin          : 10px;
     text-align      : center;
     border-style    : solid;
     border-color    : green;
