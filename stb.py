@@ -81,8 +81,10 @@ class Relay:
         self.__set_frontend_status()
 
     def __init__(self, index, **kwargs):
-        self.relay_no = kwargs.get('relay_num', -1)
-        assert (0 <= self.relay_no <= 7), "Relay number should be from 0 to 7"
+        relay_num = kwargs.get('relay_num', -1)
+        assert (0 <= relay_num <= 7), "Relay number should be from 0 to 7"
+        # inverse mapping for the PCF library
+        self.relay_no = [*range(7, -1, -1)].index(relay_num)
         self.name = kwargs.get('name', "Extra")
         self.code = kwargs.get('code', "XX"+str(index))
         self.active_high = kwargs.get('active_high', True)
@@ -163,7 +165,7 @@ class STB:
 
         global recv_sockets, logger_socket
         # First socket Arduino on RS485, the next one is for injecting test strings from test_socket
-        recv_sockets = [SocketClient('127.0.0.1', serial_port), 
+        recv_sockets = [SocketClient('127.0.0.1', serial_port),
                         SocketClient('127.0.0.1', test_port, trials=5)]
         logger_socket = SocketServer(cmd_port)
 
@@ -190,7 +192,7 @@ class STB:
         # Get pin value from relay_no attr in relay instance
         for relay in self.relays:
             pin = relay.relay_no
-            self.__read_pcf(pin)
+            self.__read_pcf(relay)
             try:
                 relay.set_status(self.pcf_write.port[pin])
             except IOError:
@@ -201,13 +203,18 @@ class STB:
             self.pcf_write.port[pin] = value
         except IOError:
             self.error = "Error with write PCF"
+            sleep(1)  # wait to avoid IO Error and try again
+            self.__write_pcf(pin, value)
 
-    def __read_pcf(self, pin):
-        ret = self.relays[pin].status
+    def __read_pcf(self, relay):
+        ret = relay.status
+        pin = relay.relay_no
         try:
             ret = bool(self.pcf_read.port[pin])
         except IOError:
             self.error = "Error with read PCF"
+            sleep(1)  # wait to avoid IO Error and try again
+            self.__read_pcf(relay)
         return ret
 
     def __gpio_init(self):
@@ -224,30 +231,32 @@ class STB:
             print(e)
             print("sth went terribly wrong with GPIO import")
             exit()
-            
+
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         for brain in self.brains:
             GPIO.setup(brain.reset_pin, GPIO.OUT, initial=False)
         return GPIO
 
-    def set_override(self, relay_index, value, test):
+    def set_override(self, relay_code, value, test):
         # do yourself a favour and don't pass values into html merely JS,
         # converting bools into 3 different languages smeared into json is not fun
         # function only flips existing variable
-        relay = self.relays[int(relay_index)]
+        # Relay codes should be key parameter
+        relay = [r for r in self.relays if r.code == relay_code][0]
         relay.set_auto(not relay.auto)
         self.__log_action("{} relay {} auto {}".format(
-            self.user, relay.index, relay.auto))
+            self.user, relay.relay_no, relay.auto))
 
     # changes from the frontend applied to the GPIO pins
-    def set_relay(self, part_index, status=None, test=None):
-        print("set_relay vars {} {} {}".format(part_index, status, test))
-        relay = self.relays[part_index]
+    def set_relay(self, relay_code, status=None, test=None):
+        print("set_relay vars {} {} {}".format(relay_code, status, test))
+        # Relay codes should be key parameter
+        relay = [r for r in self.relays if r.code == relay_code][0]
         # if we pass nothing we flip the relay
         if status is None or type(status) is not bool:
             status = not relay.status
-        print("setting relay {} to status {}".format(part_index, status))
+        print("setting relay {} to status {}".format(relay_code, status))
         relay.set_status(status)
         self.__write_pcf(relay.relay_no, relay.status)
         self.__log_action("User {} Relay {} from {} to {}".format(
@@ -359,18 +368,22 @@ class STB:
                 # TODO: currently does nothing finish feature @abdullah or discuss with me
                 # Brain restarted
                 if search("setup", msg.lower()):
-                    relay.riddle_status = "unsolved"
+                    print("A riddle should restart")
+                    # source is sys!!
+                    #relay = [r for r in self.relays if r.code == source][0]
+                    #relay.riddle_status = "unsolved"
                     continue
 
             for relay in self.relays:
-                if match(relay.code, source) is None:
-                    continue
-                # We check the current status
                 if relay.riddle_status == "done":
                     continue
 
                 if relay.riddle_status == "correct":
                     relay.riddle_status = "done"
+                    continue
+
+                # We check the current status
+                if match(relay.code, source) is None:
                     continue
 
                 relay.riddle_status = "unsolved"
@@ -406,7 +419,7 @@ class STB:
         for relay in self.relays:
             # auto = true, manual = false
             if relay.auto:
-                new_status = self.__read_pcf(relay.relay_no)
+                new_status = self.__read_pcf(relay)
                 if new_status != relay.status:
                     relay.set_status(new_status)
                     relay_msg = "Relay {} no {} switched to {} by Brain".format(
@@ -416,7 +429,8 @@ class STB:
                     else:
                         logger_socket.transmit(relay_msg)
                     self.updates.insert(
-                        0, [relay.code, relay.status_frontend, relay.text_on])
+                        0, [relay.code, relay.status_frontend, relay.riddle_status])
+
                 self.__write_pcf(relay.relay_no, new_status)
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
