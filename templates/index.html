@@ -48,11 +48,15 @@
                     if (status != null) {
                         console.log("status found: " + status.id)
                         status.innerHTML = relay_data[1];
+                        if (relay_data[2] == "correct") {
+                            status.style.borderColor = "green"
+                        } else {
+                            status.style.borderColor = "red"
+                            setTimeout(function () { status.style.borderColor = "#555" }, 3000);
+
+                        }
                     }
                 });
-
-                // TODO ask @Martin what is cb?!
-                // @Abdullah Callback, a function called after the code has been executed to respond
             });
 
             function print_debugger(line) {

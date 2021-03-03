@@ -422,8 +422,8 @@ class STB:
                 new_status = self.__read_pcf(relay)
                 if new_status != relay.status:
                     relay.set_status(new_status)
-                    relay_msg = "Relay {} no {} switched to {} by Brain".format(
-                        relay.code, relay.relay_no, relay.status)
+                    relay_msg = "Relay {} switched to {} by Brain".format(
+                        relay.code, relay.status)
                     if self.admin_mode or not relay.hidden:
                         self.__log_action(relay_msg)
                     else:
