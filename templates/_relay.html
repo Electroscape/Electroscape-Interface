@@ -8,6 +8,16 @@
         </div> 
     </th>
     <td>
+        <form method="POST" action="" id="onOff_{{relay.code}}">
+            <button
+                type="submit"
+                class="btn_override"
+                id="btn_onOff_{{relay.code}}"
+                name="relayOverride_{{relay.code}}"
+                style="display: none;">
+                Toggle Relay
+            </button>
+        </form>
         <div class="riddle_solution" id="solution_{{relay.code}}">
             {{relay.answer}}
         </div>
@@ -28,20 +38,35 @@
 
     <!-- Handle override press-->
     <script>
-        $('#form_{{relay.code}}').submit( function(e) { 
+        $("#form_{{relay.code}},#onOff_{{relay.code}}").submit( function(e) { 
             //prevent submit
             e.preventDefault();
-         
+            var Id = this.id;
             //do things on submit
             $.ajax({
                 data: "relayOverride_{{relay.code}}",
                 type: "POST",
                 beforeSend: function(){
-                 //before send data
+                    //before send data
+                    console.log("pressed by {{Id}}");
+                    if (Id == "form_{{relay.code}}") {
+                        return confirm("Are you sure you want to override?");
+                    }
                 },
                 success: function(){
                     // the data
                     console.log("post {{relay.code}} override successfully");
+                    if (Id == "form_{{relay.code}}") {
+                        let sol = document.getElementById("solution_{{relay.code}}");
+                        let inp = document.getElementById("input_{{relay.code}}");
+                        let old_btn = document.getElementById("btn_{{relay.code}}");
+                        let new_btn = document.getElementById("btn_onOff_{{relay.code}}");
+                        sol.style.display = "none";
+                        inp.style.display = "none";
+                        old_btn.disabled = true;
+                        old_btn.textContent = "LOCKED"
+                        new_btn.style.display = "";
+                    }
                 }
             });
           });      

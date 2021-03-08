@@ -250,7 +250,7 @@ class STB:
         self.__write_pcf(relay.relay_no, relay.status)
         relay.set_status(status)
         relay.set_riddle_status("override")
-        # stop mirroring when override
+        # stop mirroring once override
         relay.set_auto(False)
         self.updates.insert(
             0, [relay.code, relay.status_frontend, relay.riddle_status])

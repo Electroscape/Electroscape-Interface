@@ -55,20 +55,25 @@
       "text_off": "CLOSED"
     },
     {
-      "relay_num": 4,
-      "name": "Extra_1",
-      "code": "XX1",
-      "answer": "N/A",
-      "hidden": true,
-      "brain_num": -1
-    },
-    {
       "relay_num": 1,
       "name": "Light 2nd Room",
       "code": "LI2",
       "answer": "N/A",
       "hidden": true,
       "brain_num": 4
+    },
+    {
+      "relay_num": 4,
+      "name": "Extra_1",
+      "code": "XX1",
+      "answer": "N/A",
+      "active_high": true,
+      "auto": false,
+      "hidden": true,
+      "text_on": "ON",
+      "text_off": "OFF",
+      "first_message": "No Input",
+      "brain_num": -1
     }
   ],
   "Brains": [

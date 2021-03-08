@@ -50,9 +50,16 @@
                         status.innerHTML = relay_data[1];
                         if (relay_data[2] == "correct") {
                             status.style.borderColor = "green";
+                        } else if (relay_data[2] == "override"){
+                            status.style.borderColor = "#e6c846";
+                            status.style.color = "black"; 
+                            status.style.backgroundColor = "#e6c846";
+                            setTimeout(function () {
+                                status.style.color = "white" 
+                                status.style.backgroundColor = "black"
+                            }, 1000);
                         } else {
-                            status.style.borderColor = 
-                                relay_data[2] == "override"? "#e6c846" : "red"; 
+                            status.style.borderColor = "red"; 
                             setTimeout(function () { status.style.borderColor = "#555" }, 3000);
                         }
                     }
@@ -86,32 +93,32 @@
             });
 
             function riddle_correct_solution(relay) {
-                canv = document.getElementById("fireworks_canvas");
+                let canv = document.getElementById("fireworks_canvas");
                 canv.style.display = "inline-block";
                 setTimeout(function () { canv.style.display = "none" }, 3000);
-                inp = document.getElementById("input_" + relay.code);
+                let inp = document.getElementById("input_" + relay.code);
                 inp.style.borderColor = "green";
-                sol = document.getElementById("solution_" + relay.code);
+                let sol = document.getElementById("solution_" + relay.code);
                 sol.style.display = "none"
-                btn = document.getElementById("btn_" + relay.code);
+                let btn = document.getElementById("btn_" + relay.code);
                 btn.textContent = "LOCKED"
                 btn.disabled = true
             }
 
             function riddle_wrong_solution(relay) {
-                inp = document.getElementById("input_" + relay.code);
+                let inp = document.getElementById("input_" + relay.code);
                 inp.style.borderColor = "red";
             }
 
             function riddle_normal_display(relay) {
-                inp = document.getElementById("input_" + relay.code);
+                let inp = document.getElementById("input_" + relay.code);
                 inp.style.borderColor = "#555";
                 inp = document.getElementById("input_" + relay.code);
                 inp.innerHTML = relay.last_message;
             }
 
             function riddle_update_frontend(relays) {
-                var elems = document.body.getElementsByClassName("riddle_input");
+                let elems = document.body.getElementsByClassName("riddle_input");
 
                 [].forEach.call(elems, function (elm) {
                     for (let rel of relays.relays) {
@@ -202,9 +209,9 @@
                 <th scope="col" class="table_header">Override</th>
             </tr>
             {% for relay in relays %}
-            {% if not relay.hidden or username.lower() == "admin" %}
-            {% include '_relay.html' %}
-            {% endif %}
+                {% if not relay.hidden or username.lower() == "admin" %}
+                    {% include '_relay.html' %}
+                {% endif %}
             {% endfor %}
         </table>
     </div>
