@@ -13,3 +13,5 @@ templates/backup_old/*
 
 GPIOEmulator/*
 
+
+wenv/
