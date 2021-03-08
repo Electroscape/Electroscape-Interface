@@ -115,7 +115,7 @@ class Brain:
 
     def reset_relay_modes(self):
         for relay in self.associated_relays:
-            relay.set_riddle_status = "unsolved"
+            relay.set_riddle_status("unsolved")
             relay.set_auto(relay.auto_default)
 
 
