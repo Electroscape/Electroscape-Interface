@@ -58,16 +58,8 @@ class Settings:
 
 class Relay:
 
-    def __set_frontend_auto(self):
-        # since the label is Auto for the checkbox its reverse
-        if self.auto:
-            self.auto_frontend = "true"
-        else:
-            self.auto_frontend = "false"
-
     def set_auto(self, auto):
         self.auto = auto
-        self.__set_frontend_auto()
 
     def __set_frontend_status(self):
         print("setting status for frontend for relay {}".format(self.name))
@@ -79,6 +71,9 @@ class Relay:
     def set_status(self, status):
         self.status = status
         self.__set_frontend_status()
+
+    def set_riddle_status(self, status):
+        self.riddle_status = status
 
     def __init__(self, index, **kwargs):
         relay_num = kwargs.get('relay_num', -1)
@@ -120,6 +115,7 @@ class Brain:
 
     def reset_relay_modes(self):
         for relay in self.associated_relays:
+            relay.set_riddle_status = "unsolved"
             relay.set_auto(relay.auto_default)
 
 
@@ -207,18 +203,18 @@ class STB:
             sleep(1)  # wait to avoid IO Error and try again
             self.__write_pcf(pin, value)
 
-    def __read_pcf(self, relay, read_write_pcf=False):
+    def __read_pcf(self, relay, read_pcf_write=False):
         ret = relay.status
         pin = relay.relay_no
         try:
-            if read_write_pcf:
+            if read_pcf_write:
                 ret = bool(self.pcf_write.port[pin])
             else:
                 ret = bool(self.pcf_read.port[pin])
         except IOError:
             self.error = "Error with read PCF"
             sleep(1)  # wait to avoid IO Error and try again
-            self.__read_pcf(relay, read_write_pcf)
+            self.__read_pcf(relay, read_pcf_write)
         return ret
 
     def __gpio_init(self):
@@ -242,16 +238,6 @@ class STB:
             GPIO.setup(brain.reset_pin, GPIO.OUT, initial=False)
         return GPIO
 
-    def set_override(self, relay_code, value):
-        # do yourself a favour and don't pass values into html merely JS,
-        # converting bools into 3 different languages smeared into json is not fun
-        # function only flips existing variable
-        # Relay codes should be key parameter
-        relay = [r for r in self.relays if r.code == relay_code][0]
-        relay.set_auto(value)
-        self.__log_action("{} relay {} auto {}".format(
-            self.user, relay.code, relay.auto))
-
     # changes from the frontend applied to the GPIO pins
     def override_relay(self, relay_code, status=None, test=None):
         print("set_relay vars {} {} {}".format(relay_code, status, test))
@@ -261,10 +247,15 @@ class STB:
         if status is None or type(status) is not bool:
             status = not relay.status
         print("setting relay {} to status {}".format(relay_code, status))
-        relay.set_status(status)
         self.__write_pcf(relay.relay_no, relay.status)
-        self.__log_action("User {} Relay {} from {} to {}".format(
-            self.user, relay.name, not status, status))
+        relay.set_status(status)
+        relay.set_riddle_status("override")
+        # stop mirroring when override
+        relay.set_auto(False)
+        self.updates.insert(
+            0, [relay.code, relay.status_frontend, relay.riddle_status])
+        self.__log_action("User {} override relay {} to {}".format(
+            self.user, relay.name, status))
         # takes the cake for the unsexiest variable
         logger_socket.transmit("!log: {}".format(
             self.brains[relay.brain_association].name))
@@ -379,7 +370,8 @@ class STB:
                     continue
 
             for relay in self.relays:
-                if relay.riddle_status == "done":
+                if relay.riddle_status == "done" or \
+                        relay.riddle_status == "override":
                     continue
 
                 if relay.riddle_status == "correct":
@@ -436,15 +428,6 @@ class STB:
                         0, [relay.code, relay.status_frontend, relay.riddle_status])
 
                 self.__write_pcf(relay.relay_no, new_status)
-            # if not auto display the write_pcf status
-            else:
-                new_status = self.__read_pcf(relay, read_write_pcf=True)
-                if new_status != relay.status:
-                    print("Relay {} is manual on {}".format(
-                        relay.code, relay.status))
-                    relay.set_status(new_status)
-                    self.updates.insert(
-                        0, [relay.code, relay.status_frontend, relay.riddle_status])
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
         for recv_socket in recv_sockets:

@@ -120,7 +120,6 @@ def interpreter(immutable):
         # set auto to false
         if match("relayOverride", action):
             action, part_index = split("_", key)
-            stb.set_override(part_index, False)
 
         # careful with the functions they values
         # passed are all strings since it comes from jsons

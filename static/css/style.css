@@ -22,10 +22,14 @@ body {
     border-collapse: separate;
 }
 
+.table_header {
+    text-align: center;
+    padding   : 20px 0px 5px;
+}
+
 .relay_title {
-    font-size     : 16pt;
-    padding-top   : 0.5em;
-    padding-bottom: 0.1em;
+    font-size: 16pt;
+    padding  : 15px 15px 0px;
 }
 
 .relay_status {
@@ -59,6 +63,13 @@ body {
     border-style    : solid;
     border-color    : #555;
     min-width       : 80px;
+}
+
+.btn_override[disabled] {
+    cursor          : not-allowed;
+    opacity         : 0.75;
+    color           : #555;
+    background-color: black;
 }
 
 .ON_Box {

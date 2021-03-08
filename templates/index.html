@@ -41,19 +41,19 @@
 
             socket.emit('serial_buffer_request');
 
-            socket.on('relay_update', function (data, cb) {
+            socket.on('relay_update', function (data) {
                 data.updates.forEach(function (relay_data) {
                     console.log("relay " + relay_data[0] + " has been updated to " + relay_data[1]);
                     var status = document.getElementById("status_" + relay_data[0]);
                     if (status != null) {
-                        console.log("status found: " + status.id)
+                        console.log("status found: " + status.id);
                         status.innerHTML = relay_data[1];
                         if (relay_data[2] == "correct") {
-                            status.style.borderColor = "green"
+                            status.style.borderColor = "green";
                         } else {
-                            status.style.borderColor = "red"
+                            status.style.borderColor = 
+                                relay_data[2] == "override"? "#e6c846" : "red"; 
                             setTimeout(function () { status.style.borderColor = "#555" }, 3000);
-
                         }
                     }
                 });
@@ -91,6 +91,11 @@
                 setTimeout(function () { canv.style.display = "none" }, 3000);
                 inp = document.getElementById("input_" + relay.code);
                 inp.style.borderColor = "green";
+                sol = document.getElementById("solution_" + relay.code);
+                sol.style.display = "none"
+                btn = document.getElementById("btn_" + relay.code);
+                btn.textContent = "LOCKED"
+                btn.disabled = true
             }
 
             function riddle_wrong_solution(relay) {
@@ -192,14 +197,14 @@
                 </td>
             </tr>
             <tr>
-                <th scope="col" style="padding: 50px 50px 0px 50px;">Riddle</th>
-                <th scope="col" style="padding: 50px 50px 0px 50px;">Input</th>
-                <th scope="col" style="padding: 50px 50px 0px 50px;">Override</th>
+                <th scope="col" class="table_header">Riddle</th>
+                <th scope="col" class="table_header">Input</th>
+                <th scope="col" class="table_header">Override</th>
             </tr>
             {% for relay in relays %}
-                {% if not relay.hidden or username.lower() == "admin" %}
-                    {% include '_relay.html' %}
-                {% endif %}
+            {% if not relay.hidden or username.lower() == "admin" %}
+            {% include '_relay.html' %}
+            {% endif %}
             {% endfor %}
         </table>
     </div>
