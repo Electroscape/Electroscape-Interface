@@ -63,6 +63,7 @@ body {
     border-style    : solid;
     border-color    : #555;
     min-width       : 80px;
+    display         : none;
 }
 
 .btn_override[disabled] {
