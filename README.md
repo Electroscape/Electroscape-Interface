@@ -3,11 +3,18 @@ web_stb_override beta
 
 ## installation
 Since flask can defenitely get issues like the latter one 
-use a Venv
+use a Venv, this is build and tested for RPis on Python 3.7.x earlier version like 3.5x are not supported
 
-move inside the project folder
-python3 -m venv venv
-source venv/bin/activate
+simply update the venv location in env/bin/activate 
+line 40 VIRTUAL_ENV="/home/pi/TE/Electroscape-Interface/env"
+to whatever is local to you
+
+project contains shellscripts to launch from, 
+those can be made executeable with chmod +x myfile
+
+alternatively from plain console
+python3 -m venv env
+and run the python files
 
 
 ## common inssues
