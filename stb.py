@@ -263,6 +263,7 @@ class STB:
     def restart_all_brains(self, *_):
         txt = "\n\nroom has been reset by user {}\n\n".format(self.user)
         print(txt)
+        self.logout()
         logger_socket.transmit(txt)
 
         pins = []
