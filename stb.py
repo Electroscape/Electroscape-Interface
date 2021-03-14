@@ -345,6 +345,7 @@ class STB:
     # checks for keyworded messaged that contain updates to riddles and passes it on
     def __filter(self, lines):
         for index, line in enumerate(lines):
+            line = line.lstrip()
             # only evaluate complete messages
             if match(self.settings.brain_tag, line) is None:
                 print("no braintag, discarding")
@@ -365,13 +366,12 @@ class STB:
                 if search("setup", msg.lower()):
                     print("A riddle should restart")
                     # source is sys!!
-                    #relay = [r for r in self.relays if r.code == source][0]
-                    #relay.riddle_status = "unsolved"
+                    # relay = [r for r in self.relays if r.code == source][0]
+                    # relay.riddle_status = "unsolved"
                     continue
 
             for relay in self.relays:
-                if relay.riddle_status == "done" or \
-                        relay.riddle_status == "override":
+                if relay.riddle_status == "done" or relay.riddle_status == "override":
                     continue
 
                 if relay.riddle_status == "correct":
@@ -395,11 +395,10 @@ class STB:
                     # if we translate, we translate for the frontend aswell
                     lines[index] = msg
                 else:
-                    msg = msg.lower()[1:]
-                    if msg.lower() == '!reset':
+                    msg = msg.lower()
+                    if match('!reset', msg) is not None:
                         relay.last_message = relay.first_message
-                        continue
-                    relay.riddle_status = msg
+                    relay.riddle_status = msg[1:]
         return lines
 
     def __add_serial_lines(self, lines):
