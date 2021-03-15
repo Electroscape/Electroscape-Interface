@@ -433,8 +433,8 @@ class STB:
         for recv_socket in recv_sockets:
             ser_lines = recv_socket.read_buffer()  # copy.deepcopy()
             if ser_lines is not None and ser_lines:
-                ser_lines = self.__filter(
-                    ser_lines[::-1])  # basically a reverse
+                ser_lines = self.__filter(ser_lines)  # basically a reverse
+                ser_lines = ser_lines[::-1]
                 print("returned ser_lines: {}".format(ser_lines))
                 self.__add_serial_lines(ser_lines)
 
