@@ -83,7 +83,9 @@
     [ "SECRET_DOOR", 27]
   ],
   "Translation_Dict": {
-    "translate_this": "translate_that"
+    "C1": "Zylinder",
+    "C2": "Pyramide",
+    "C3": "Leer"
   },
   "Serial_line_limit": 80
 }
