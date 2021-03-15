@@ -28,6 +28,12 @@ https://github.com/miguelgrinberg/Flask-SocketIO/issues/1105
 another issue that existed but got fixed by the provided requirements, pinning the Werkzeug==0.16.1 
 https://github.com/jarus/flask-testing/issues/143
 
+- further Import errors like flask socketio:
+do not run from Sudo python3 app.py, using sends you back to global env
+
+- No serial found:
+Make sure your RPi has serial console enabled but UART/BT disabled
+
 ## for development on a PC
 - The Venv deliberately doesnt contain fakeRPiGPIO since this library is on conflict with the RPi GPIO library.
     therefore you should install it manually when working on a PC
