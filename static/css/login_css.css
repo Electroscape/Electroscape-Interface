@@ -2,25 +2,26 @@
   display    : flex;
   align-items: center;
   width      : 100%;
-  max-width  : 900px;
+  max-width  : 750px;
 }
 
 .group input[type="submit"] {
-  width : 25%;
-  margin: 10px;
+  width           : 25%;
+  margin          : 10px;
+  background-color: #555;
+  color           : gray;
 }
 
 #name {
   width         : 100%;
   padding-inline: 0px;
   text-align    : center;
-  border-color  : gray;
+  border-color  : #555;
   color         : white;
 }
 
 .group input {
   display         : block;
-  border          : 1px solid gray;
   color           : white;
   font-size       : 14px;
   height          : 35px;
@@ -44,8 +45,11 @@ input[type="submit"]:hover {
 }
 
 input[type="submit"][disabled] {
-  background-color: #555;
+  background-color: transparent;
   border-color    : red;
+  outline         : 2.6px solid red;
+  cursor          : not-allowed;
+  color           : whitesmoke;
 }
 
 .autocomplete {

@@ -2,10 +2,6 @@
 <html lang="en">
 
 <style>
-    body {
-        background-image: url("{{ url_for('static', filename='img/Hintergrund_Standard.jpg') }}")
-    }
-
     #fireworks_canvas {
         display: none;
         position: absolute;
@@ -50,16 +46,16 @@
                         status.innerHTML = relay_data[1];
                         if (relay_data[2] == "correct") {
                             status.style.borderColor = "green";
-                        } else if (relay_data[2] == "override"){
+                        } else if (relay_data[2] == "override") {
                             status.style.borderColor = "#e6c846";
-                            status.style.color = "black"; 
+                            status.style.color = "black";
                             status.style.backgroundColor = "#e6c846";
                             setTimeout(function () {
-                                status.style.color = "white" 
+                                status.style.color = "white"
                                 status.style.backgroundColor = "black"
                             }, 1000);
                         } else {
-                            status.style.borderColor = "red"; 
+                            status.style.borderColor = "red";
                             setTimeout(function () { status.style.borderColor = "#555" }, 3000);
                         }
                     }
@@ -84,7 +80,7 @@
                 var all_lines = data.lines.toString().split("\n");
                 for (let index = 0; index < all_lines.length; index++) {
                     var line = all_lines[index];
-                    print_debugger(line);
+                    // print_debugger(line);
                 }
                 var old_lines = $('#serial_log').html().split("<br>");
                 old_lines.unshift(data.lines);
@@ -178,10 +174,15 @@
                 <col span="1" style="width: 50%;">
                 <col span="1" style="width: 25%;">
             </colgroup>
+            <thead>
             <tr>
                 <td>
                     <div class="header_box">
-                        ON
+                        {% if username.lower() == "admin" %}
+                            Admin Mode
+                        {% else %}
+                            ON
+                        {% endif %}
                     </div>
                 </td>
                 <td>
@@ -203,16 +204,19 @@
                     </script>
                 </td>
             </tr>
-            <tr>
-                <th scope="col" class="table_header">Riddle</th>
-                <th scope="col" class="table_header">Input</th>
-                <th scope="col" class="table_header">Override</th>
-            </tr>
-            {% for relay in relays %}
-                {% if not relay.hidden or username.lower() == "admin" %}
-                    {% include '_relay.html' %}
-                {% endif %}
-            {% endfor %}
+                <tr>
+                    <th scope="col" class="table_header">Riddle</th>
+                    <th scope="col" class="table_header">Input</th>
+                    <th scope="col" class="table_header">Override</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for relay in relays %}
+                    {% if not relay.hidden or username.lower() == "admin" %}
+                        {% include '_relay.html' %}
+                    {% endif %}
+                {% endfor %}
+            </tbody>
         </table>
     </div>
     <br>
@@ -222,6 +226,8 @@
     <br>
     <div id="serial_log" class="log"></div>
     <br>
+    {% if 1 == 2 %}
+    <!-- Strong comment
     <h2>Debug: </h2>
     <br>
     <table>
@@ -243,9 +249,6 @@
     </table>
     <div id="debug_log" class="log">This is the debug_log</div>
 
-
-    {% if 1 == 2 %}
-    <!-- Strong comment
 <br>
 <br>
 

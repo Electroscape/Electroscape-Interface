@@ -1,20 +1,18 @@
 <div class="topnav" style="display: table;">
     <span class="left">
-        STB-Pi-Interface {{ room_name }}
-        {% if username.lower() == "admin" %}
-            , Admin Mode
-        {% endif %}
+        <span style="color: DodgerBlue;">ELECTROSCAPE
+            <span style="color: white;"> ROOM CONTROL INTERFACE V1.1</span>
+        </span>
     </span>
-
-    <span class="right">
+    
+    <span class="right" {% if not username %}style="visibility: hidden;"{% endif %}>
         <form id="logout_btn" class="button" method="POST" action="">
             <div class="button-wrapper">
-                <p>Hello, {{username}}</p>
+                <p>Hello, {% if username %}{{username}}{% endif %}</p>
                 <button type="submit" name="logout">
                     logout
                 </button>
             </div>
         </form>
     </span>
-
 </div>

@@ -9,32 +9,37 @@ h3 {
 }
 
 body {
-    font-family     : 'Montserrat', sans-serif;
-    background-color: rgb(30, 30, 30);
-    color           : #E6C846;
+    font-family     : 'Montserrat', sans;
+    background-color: black;
+    color           : gray;
     padding         : 20px 20px;
 }
 
 .relays_table {
     width          : 100%;
-    max-width      : 900px;
+    max-width      : 750px;
     padding        : 0px 15px;
+    margin         : 30px;
     border-collapse: separate;
 }
 
 .table_header {
-    text-align: center;
-    padding   : 20px 0px 5px;
+    text-align         : center;
+    -webkit-text-stroke: 1px DodgerBlue;
+    color              : white;
+    font-size          : 14pt;
+    padding            : 15px 0px 0px 15px;
 }
 
 .relay_title {
-    font-size: 16pt;
-    padding  : 15px 15px 0px;
+    font-size: 12pt;
+    color    : gray;
+    padding  : 25px 0px 0px 15px;
 }
 
 .relay_status {
     background-color: black;
-    color           : white;
+    color           : gray;
     padding         : 10px;
     margin          : 10px;
     text-align      : center;
@@ -44,7 +49,7 @@ body {
 
 .riddle_input {
     background-color: black;
-    color           : white;
+    color           : gray;
     padding         : 10px;
     margin          : 10px;
     text-align      : center;
@@ -56,7 +61,7 @@ body {
     position        : absolute;
     opacity         : 50%;
     background-color: black;
-    color           : white;
+    color           : gray;
     padding         : 10px;
     margin          : 10px;
     text-align      : center;
@@ -75,7 +80,7 @@ body {
 
 .ON_Box {
     background-color: black;
-    color           : white;
+    color           : gray;
     padding         : 10px;
     margin          : 10px;
     text-align      : center;
@@ -86,7 +91,7 @@ body {
 
 .header_box {
     background-color: black;
-    color           : white;
+    color           : gray;
     padding         : 10px;
     margin          : 10px;
     text-align      : center;
@@ -108,19 +113,16 @@ div.log {
 }
 
 div.topnav {
-    width              : 100%;
-    overflow           : hidden;
-    margin-top         : 0;
-    margin-left        : 0;
-    /* background-color: rgb(30,30,30); */
-    font-size          : 2.5em;
-    margin             : auto;
-    font-weight        : bold;
-    padding            : 0px 30px;
+    width      : 100%;
+    overflow   : hidden;
+    font-size  : 2.5em;
+    margin     : 0px 30px;
+    font-weight: bold;
+    padding    : 0px 30px;
 }
 
 .left {
-    font-size     : 0.75em;
+    font-size     : 16pt;
     display       : table-cell;
     vertical-align: middle;
 }
@@ -152,7 +154,7 @@ div.topnav {
 button {
     background-color: #555;
     font-weight     : bold;
-    color           : black;
+    color           : gray;
     padding         : 10px 30px;
     width           : 100%;
     transition      : all .23s ease;
@@ -185,6 +187,10 @@ div.relay_box {
     display         : inline;
     padding         : 0px 30px;
     margin          : 10px;
+}
+
+#serial_log {
+    color: whitesmoke;
 }
 
 div.brain_restarts {

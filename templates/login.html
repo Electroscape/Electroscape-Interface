@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
-    body {
-        background-image: url("{{url_for('static', filename='img/Hintergrund_Standard.jpg')}}")
-    }
-</style>
-
 <head>
     <meta charset="utf-8"/>
     <title>STB-Pi {{ room_name }}</title>
@@ -24,20 +18,20 @@
        console.log(result);
        if (result.length){
           btn.value = 'NO USER FOUND';
-          lbl_name.style.borderColor = "red";
+          lbl_name.style.border = "solid red";
           btn.disabled = "disabled";
           return false;
         }else if (username.toUpperCase() == "ADMIN"){
           document.getElementById("admin_checkbox").checked = true;
         }
-        document.getElementById("name").style.borderColor = 'green';
+        lbl_name.style.border = 'solid green';
         return true;
      };
 </script>
 </head>
 
 <body>
-    <div><h2>STB-Pi-Interface {{ room_name }}</h2></div>
+    {% include '_navbar.html' %}
     <div style="margin: 50px;">
         <form autocomplete="off" method="POST" action="" onsubmit="return denylist_check();">
             <div class="flex-contianter group">
