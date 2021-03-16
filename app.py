@@ -173,6 +173,10 @@ def updater():
                 stb.serial_updates = []
 
             if stb.riddles_updated:
+                # for debugging purposes
+                if False:
+                    for relay in stb.relays:
+                        print("{} {} {}".format(relay.code, relay.riddle_status, relay.last_message))
                 socketio.emit('riddles_updated', {
                               'relays': stb.relays_to_dict()}, namespace='/test', broadcast=True)
                 stb.riddles_updated = False

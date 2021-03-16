@@ -101,34 +101,24 @@
                 btn.disabled = true
             }
 
-            function riddle_wrong_solution(relay) {
-                let inp = document.getElementById("input_" + relay.code);
-                inp.style.borderColor = "red";
-            }
-
-            function riddle_normal_display(relay) {
-                let inp = document.getElementById("input_" + relay.code);
-                inp.style.borderColor = "#555";
-                inp = document.getElementById("input_" + relay.code);
-                inp.innerHTML = relay.last_message;
-            }
-
             function riddle_update_frontend(relays) {
                 let elems = document.body.getElementsByClassName("riddle_input");
 
                 [].forEach.call(elems, function (elm) {
                     for (let rel of relays.relays) {
                         if (elm.id == "input_" + rel.code) {
-                            if (rel.riddle_status == 'done')
-                                continue
+
+                            let inp = document.getElementById("input_" + rel.code);
 
                             if (rel.riddle_status == 'correct') {
                                 riddle_correct_solution(rel)
                             } else if (rel.riddle_status == 'wrong') {
-                                riddle_wrong_solution(rel)
+                                inp.style.borderColor = "red";
                             } else {
-                                riddle_normal_display(rel)
+                                inp.style.borderColor = "#555";
                             }
+
+                            inp.innerHTML = rel.last_message;
                             break;
                         }
                     }
@@ -148,7 +138,7 @@
                 if (heartbeat_timeout > 5) {
                     window.location.replace('https://developer.mozilla.org/en-US/docs/Web/API/Location.reload');
                 } else {
-                    heartbeat_timeout++;
+                    // heartbeat_timeout++;
                 }
             }, 1000);
 
