@@ -136,7 +136,7 @@ class STB:
 
     def __load_stb(self):
         try:
-            with open('config.json') as json_file:
+            with open('config_s.json') as json_file:
                 cfg = json.loads(json_file.read())
                 room_name = cfg["Room_name"]
                 relays = cfg["Relays"]
@@ -345,8 +345,10 @@ class STB:
 
     # checks for keyworded messaged that contain updates to riddles and passes it on
     def __filter(self, lines):
+
         for index, line in enumerate(lines):
             line = line.lstrip()
+
             # only evaluate complete messages
             if match(self.settings.brain_tag, line) is None:
                 print("no braintag, discarding")
@@ -354,6 +356,7 @@ class STB:
             if search("Done.*$", line) is None:
                 print("incomplete message, discarding")
                 continue
+
             try:
                 _, source, msg, _ = split(",", line)
             except ValueError:
@@ -393,7 +396,7 @@ class STB:
                 if match('!', msg) is None:
                     msg = self.__msg_translate(msg)
                     relay.last_message = msg
-                    # if we translate, we translate for the frontend aswell
+                    print("updating last_message to: {}".format(msg))
                     lines[index] = msg
                 else:
                     msg = msg.lower()
@@ -433,9 +436,13 @@ class STB:
         for recv_socket in recv_sockets:
             ser_lines = recv_socket.read_buffer()  # copy.deepcopy()
             if ser_lines is not None and ser_lines:
+                print("received ser_lines: ")
+                for line in ser_lines:
+                    print(line)
+                print("\n")
                 ser_lines = self.__filter(ser_lines)  # basically a reverse
                 ser_lines = ser_lines[::-1]
-                print("returned ser_lines: {}".format(ser_lines))
+                # print("returned ser_lines: {}".format(ser_lines))
                 self.__add_serial_lines(ser_lines)
 
     def cleanup(self):

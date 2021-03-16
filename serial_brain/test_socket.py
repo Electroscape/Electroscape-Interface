@@ -12,6 +12,11 @@
 # !BrLight,SYS,Setup done,Done.
 # !BrCUBE,UVL,translate_this translate_this,Done.
 
+# !BrLight,LIT,!Correct,Done.
+# !BrLight,LIT,1234,Done.
+# !BrLight,LIT,4321,Done.\n!BrLight,LIT,!Wrong,Done.
+# !BrLight,LIT,4321,Done.\n!BrLight,LIT,!Reset,Done.
+
 from socketServer import SocketServer
 from pathlib import Path
 import json
