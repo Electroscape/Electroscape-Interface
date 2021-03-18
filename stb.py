@@ -136,7 +136,7 @@ class STB:
 
     def __load_stb(self):
         try:
-            with open('config_s.json') as json_file:
+            with open('config.json') as json_file:
                 cfg = json.loads(json_file.read())
                 room_name = cfg["Room_name"]
                 relays = cfg["Relays"]

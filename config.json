@@ -33,6 +33,7 @@
     {
       "relay_num": 2,
       "name": "UV Light",
+      "active_high": false,
       "code": "UVL",
       "answer": "C1 C2 C3",
       "brain_num": 4
