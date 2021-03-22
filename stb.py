@@ -92,7 +92,7 @@ class Relay:
         # just here to init the latter
         self.set_auto(self.auto)
         self.hidden = kwargs.get('hidden', False)
-        self.brain_association = kwargs.get('brain_association', -1)
+        self.brain_association = kwargs.get('brain_num', -1)
         self.status = False
         self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
@@ -268,7 +268,9 @@ class STB:
 
         pins = []
         for brain in self.brains:
+            print(brain.name)
             for relay in brain.associated_relays:
+                print("resetting relay {} to {}".format(relay.code, relay.first_message))
                 relay.last_message_status = relay.first_message
             brain.reset_relay_modes()
             pins.append(brain.reset_pin)
