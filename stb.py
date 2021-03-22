@@ -322,17 +322,7 @@ class STB:
                 "last_message": rel.last_message
             })
         return data
-    '''
-    # question is if we need to create a separate thread or handle pausing differently
-    # need to check likely we need to consider flasks limitations
-    def reset_brains(self, brains):
-        for brain in brains:
-            self.GPIO.output(brain.reset_pin, True)
 
-        sleep(0.5)
-        for brain in brains:
-            self.GPIO.output(brain.reset_pin, False)
-    '''
 
     def __msg_translate(self, msg):
         result = ""
