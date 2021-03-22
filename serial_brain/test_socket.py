@@ -39,8 +39,11 @@ def main():
     print("ready to send data to the frontend")
     while True:
         try:
-            line = input("Send line: ")
-            sock.transmit(line)
+            # seems to be a perculiarity of string literals could do \\n -> \n aswell
+            lines = input("Send line: ").replace(r'\n', '\n')
+            for line in lines.splitlines():
+                print("sending line: {}".format(line))
+                sock.transmit(line)
         except KeyboardInterrupt:
             # add sock.shutdown as fnc?
             exit()
