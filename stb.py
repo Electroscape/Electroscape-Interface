@@ -25,18 +25,10 @@ log receiving relay actions as well
 
 rpi_env = True
 
-'''
-    don't ask, everything on the frontend get smeared into strings
-    bool_dict = {"true": True, "false": False}
-    bool_convert = {"True": "false", "False": "true"}
-'''
-bool_dict = {"on": True, "off": False}
 recv_sockets = []
 logger_socket = None
-# counter = 0
 
 
-# if the threading here doesn't work move it to app into the updater thread
 def brain_restart_thread(gpio, reset_pins):
     for reset_pin in reset_pins:
         gpio.output(reset_pin, True)
@@ -219,7 +211,6 @@ class STB:
         except (RuntimeError, ModuleNotFoundError):
             print("Running without GPIOs on non Pi ENV / non RPi.GPIO installed machine")
             self.settings.is_rpi_env = False
-            # from fakeRPiGPIO import GPIO
             # GPIO.VERBOSE = False
             from GPIOEmulator.EmulatorGUI import GPIO
         except OSError as e:
@@ -238,6 +229,7 @@ class STB:
         print("set_relay vars {} {} {}".format(relay_code, status, test))
         # Relay codes should be key parameter
         relay = [r for r in self.relays if r.code == relay_code][0]
+
         # if we pass nothing we flip the relay
         if status is None or type(status) is not bool:
             status = not relay.status
@@ -245,13 +237,14 @@ class STB:
         self.__write_pcf(relay.relay_no, relay.status)
         relay.set_status(status)
         relay.set_riddle_status("override")
+
         # stop mirroring once override
         relay.set_auto(False)
         self.updates.insert(
             0, [relay.code, relay.status_frontend, relay.riddle_status])
         self.__log_action("User {} override relay {} to {}".format(
             self.user, relay.name, status))
-        # takes the cake for the unsexiest variable
+
         logger_socket.transmit("!log: {}".format(
             self.brains[relay.brain_association].name))
 
@@ -263,9 +256,11 @@ class STB:
 
         pins = []
         relays_to_reset = []
+
         for brain in self.brains:
             relays_to_reset += brain.associated_relays
             pins.append(brain.reset_pin)
+
         for relay_index in relays_to_reset:
             relay = self.relays[relay_index]
             relay.set_riddle_status("unsolved")
@@ -281,6 +276,7 @@ class STB:
         thread = Thread(target=brain_restart_thread, args=(self.GPIO, pins,))
         thread.start()
 
+    # Where is this used? so far unused
     def log_brain(self, part_index, *_):
         try:
             brain = self.brains[part_index]
@@ -319,7 +315,6 @@ class STB:
             })
         return data
 
-
     def __msg_translate(self, msg):
         result = ""
         for word in msg.split():
@@ -331,7 +326,7 @@ class STB:
         result = result.rstrip()
         return result
 
-    # checks for keyworded messaged that contain updates to riddles and passes it on
+    # checks for keywords in messages that contain updates to riddles and passes it on
     def __filter(self, lines):
 
         for index, line in enumerate(lines):
@@ -356,6 +351,7 @@ class STB:
                 # TODO: currently does nothing finish feature @abdullah or discuss with me
                 # Brain restarted
                 if search("setup", msg.lower()):
+                    # needs more info even tho its incomplete
                     print("A riddle should restart")
                     # source is sys!!
                     # relay = [r for r in self.relays if r.code == source][0]
@@ -435,11 +431,6 @@ class STB:
 
     def cleanup(self):
         self.GPIO.cleanup()
-
-# https://www.shanelynn.ie/asynchronous-updates-to-a-webpage-with-flask-and-socket-io/
-# https://flask-socketio.readthedocs.io/en/latest/
-# following didn't work iirc
-# https://realpython.com/flask-by-example-implementing-a-redis-task-queue/
 
 
 # just here fore testing when running stb.py, usually this is imported
