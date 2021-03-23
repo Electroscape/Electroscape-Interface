@@ -4,15 +4,13 @@
     {
       "relay_num": 0,
       "name": "Drucker",
-      "code": "",
       "active_high": true,
       "auto": true,
       "brain_num": -1
     },
     {
       "relay_num": 1,
-      "name": "Lüfter",
-      "code": "",
+      "name": "Luefter",
       "active_high": true,
       "auto": true,
       "brain_num": -1
@@ -20,7 +18,6 @@
     {
       "relay_num": 2,
       "name": "Kamera",
-      "code": "",
       "brain_num": -1,
       "active_high": true,
       "auto": true
@@ -28,7 +25,6 @@
     {
       "relay_num": 3,
       "name": "Licht",
-      "code": "",
       "brain_num": -1,
       "active_high": true,
       "auto": true
@@ -36,7 +32,6 @@
     {
       "relay_num": 4,
       "name": "Heizung",
-      "code": "",
       "brain_num": -1,
       "active_high": true,
       "auto": true
@@ -44,21 +39,18 @@
     {
       "relay_num": 5,
       "name": "Empty_1",
-      "code": "",
       "hidden": true,
       "brain_num": -1
     },
     {
       "relay_num": 6,
       "name": "Empty_2",
-      "code": "",
       "hidden": true,
       "brain_num": -1
     },
     {
       "relay_num": 7,
       "name": "Empty_3",
-      "code": "",
       "hidden": true,
       "brain_num": -1
     }
