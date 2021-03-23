@@ -245,8 +245,9 @@ class STB:
         self.__log_action("User {} override relay {} to {}".format(
             self.user, relay.name, status))
 
-        logger_socket.transmit("!log: {}".format(
-            self.brains[relay.brain_association].name))
+        if relay.brain_association >= 0:
+            logger_socket.transmit("!log: {}".format(
+                self.brains[relay.brain_association].name))
 
     def restart_all_brains(self, *_):
         txt = "\n\nroom has been reset by user {}\n\n".format(self.user)
