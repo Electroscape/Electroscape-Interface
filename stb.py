@@ -109,14 +109,9 @@ class Brain:
         associated_relays = []
         for relay in relays:
             if relay.brain_association == brain_no + 1:
-                associated_relays.append(relay)
+                associated_relays.append(relay.relay_no)
         self.associated_relays = associated_relays
         self.reset_pin = reset_pin
-
-    def reset_relay_modes(self):
-        for relay in self.associated_relays:
-            relay.set_riddle_status("unsolved")
-            relay.set_auto(relay.auto_default)
 
 
 class STB:
@@ -267,21 +262,22 @@ class STB:
         logger_socket.transmit(txt)
 
         pins = []
+        relays_to_reset = []
         for brain in self.brains:
-            print(brain.name)
-            for relay in brain.associated_relays:
-                print("resetting relay {} to {}".format(relay.code, relay.first_message))
-                relay.last_message_status = relay.first_message
-            brain.reset_relay_modes()
+            relays_to_reset += brain.associated_relays
             pins.append(brain.reset_pin)
+        for relay_no in relays_to_reset:
+            relay = self.relays[relay_no]
+            relay.set_riddle_status("unsolved")
+            relay.set_auto(relay.auto_default)
+            relay.last_message = relay.first_message
+
         thread = Thread(target=brain_restart_thread, args=(self.GPIO, pins,))
         thread.start()
 
     def restart_brain(self, brain):
         pins = [brain.reset_pin]
-        brain.reset_relay_modes()
-        for relay in brain.associated_relays:
-            relay.last_message_status = relay.first_message
+        # brain.reset_relay_modes()
         thread = Thread(target=brain_restart_thread, args=(self.GPIO, pins,))
         thread.start()
 
