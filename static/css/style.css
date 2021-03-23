@@ -25,7 +25,7 @@ body {
 
 .table_header {
     text-align         : center;
-    -webkit-text-stroke: 1px DodgerBlue;
+    -webkit-text-stroke: 0.5px DodgerBlue;
     color              : white;
     font-size          : 14pt;
     padding            : 15px 0px 0px 15px;
