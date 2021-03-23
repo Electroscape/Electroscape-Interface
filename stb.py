@@ -109,7 +109,7 @@ class Brain:
         associated_relays = []
         for relay in relays:
             if relay.brain_association == brain_no + 1:
-                associated_relays.append(relay.relay_no)
+                associated_relays.append(relay.index)
         self.associated_relays = associated_relays
         self.reset_pin = reset_pin
 
@@ -266,8 +266,8 @@ class STB:
         for brain in self.brains:
             relays_to_reset += brain.associated_relays
             pins.append(brain.reset_pin)
-        for relay_no in relays_to_reset:
-            relay = self.relays[relay_no]
+        for relay_index in relays_to_reset:
+            relay = self.relays[relay_index]
             relay.set_riddle_status("unsolved")
             relay.set_auto(relay.auto_default)
             relay.last_message = relay.first_message
