@@ -54,11 +54,11 @@ class Relay:
         self.auto = auto
 
     def __set_frontend_status(self):
-        print("setting status for frontend for relay {}".format(self.name))
         if self.status == self.active_high:
             self.status_frontend = self.text_off
         else:
             self.status_frontend = self.text_on
+        print("setting status for frontend for relay {} to {}".format(self.name, self.status_frontend))
 
     def set_status(self, status):
         self.status = status
@@ -75,17 +75,21 @@ class Relay:
         self.name = kwargs.get('name', "Extra")
         self.code = kwargs.get('code', "XX"+str(index))
         self.active_high = kwargs.get('active_high', True)
-        self.auto = kwargs.get('auto', True)
         self.text_on = kwargs.get('text_on', "ON")
         self.text_off = kwargs.get('text_off', "OFF")
         self.answer = kwargs.get('answer', "N/A")
         self.auto_frontend = "true"
         # this just is a function used to set the frontend to the same as backend,
         # just here to init the latter
-        self.set_auto(self.auto)
         self.hidden = kwargs.get('hidden', False)
         self.brain_association = kwargs.get('brain_num', -1)
-        self.status = False
+        auto = kwargs.get('auto', True)
+        if type(auto) is not bool:
+            self.status = (auto == "high")
+            auto = False
+        else:
+            self.status = False
+        self.auto = auto
         self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
         # unsolved, done, correct or wrong
