@@ -85,7 +85,7 @@ class Relay:
         self.brain_association = kwargs.get('brain_num', -1)
         auto = kwargs.get('auto', True)
         if type(auto) is not bool:
-            self.status = (auto == "high")
+            self.status = (auto == "manual_high")
             auto = False
         else:
             self.status = False
