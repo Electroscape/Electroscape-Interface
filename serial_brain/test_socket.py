@@ -17,6 +17,9 @@
 # !BrLight,LIT,4321,Done.\n!BrLight,LIT,!Wrong,Done.
 # !BrLight,LIT,4321,Done.\n!BrLight,LIT,!Reset,Done.
 
+# !Br,XX3,!correct,Done.
+# !Br,XX4,!wrong,Done.
+
 from socketServer import SocketServer
 from pathlib import Path
 import json

@@ -18,23 +18,23 @@
     {
       "relay_num": 2,
       "name": "Kamera",
-      "brain_num": -1,
-      "active_high": "manual_high",
-      "auto": true
+      "active_high": true,
+      "auto": "manual_high",
+      "brain_num": -1
     },
     {
       "relay_num": 3,
       "name": "Licht",
-      "brain_num": -1,
-      "active_high": "manual_low",
-      "auto": true
+      "active_high": true,
+      "auto": "manual_low",
+      "brain_num": -1
     },
     {
       "relay_num": 4,
       "name": "Heizung",
-      "brain_num": -1,
-      "active_high": "manual_low",
-      "auto": true
+      "active_high": true,
+      "auto": "manual_low",
+      "brain_num": -1
     },
     {
       "relay_num": 5,
