@@ -5,14 +5,14 @@
     <th scope="row">
         <div class="relay_status" id="status_{{relay.code}}">
             {{relay.status_frontend}}
-        </div> 
+        </div>
     </th>
     <td>
         <form method="POST" action="" id="onOff_{{relay.code}}">
             <button
-                type="submit"
-                class="btn_override"
-                id="btn_onOff_{{relay.code}}"
+                type="submit" 
+                class="btn_override" 
+                id="btn_onOff_{{relay.code}}" 
                 name="relayOverride_{{relay.code}}"
                 style="display: none;">
                 Toggle Relay
@@ -22,14 +22,14 @@
             {{relay.answer}}
         </div>
         <div class="riddle_input" id="input_{{relay.code}}">
-            {{relay.last_message}}
-        </div> 
+            Loading...
+        </div>
     </td>
     <td>
         <form method="POST" action="" id="form_{{relay.code}}">
-            <button
-                type="submit"
-                class="btn_override"
+            <button 
+                type="submit" 
+                class="btn_override" 
                 id="btn_{{relay.code}}"
                 name="relayOverride_{{relay.code}}"
             >Override</button>
@@ -38,7 +38,9 @@
 
     <!-- Handle override press-->
     <script>
-        $("#form_{{relay.code}},#onOff_{{relay.code}}").submit( function(e) { 
+        postload_styling('{{relay.code}}', '{{relay.last_message}}', '{{relay.riddle_status}}')
+        
+        $("#form_{{relay.code}},#onOff_{{relay.code}}").submit(function (e) {
             //prevent submit
             e.preventDefault();
             var Id = this.id;
@@ -46,29 +48,31 @@
             $.ajax({
                 data: "relayOverride_{{relay.code}}",
                 type: "POST",
-                beforeSend: function(){
+                beforeSend: function () {
                     //before send data
                     console.log("pressed by {{Id}}");
                     if (Id == "form_{{relay.code}}") {
                         return confirm("Are you sure you want to override?");
                     }
                 },
-                success: function(){
+                success: function () {
                     // the data
                     console.log("post {{relay.code}} override successfully");
                     if (Id == "form_{{relay.code}}") {
-                        let sol = document.getElementById("solution_{{relay.code}}");
-                        let inp = document.getElementById("input_{{relay.code}}");
-                        let old_btn = document.getElementById("btn_{{relay.code}}");
-                        let new_btn = document.getElementById("btn_onOff_{{relay.code}}");
-                        sol.style.display = "none";
-                        inp.style.display = "none";
-                        old_btn.disabled = true;
-                        old_btn.textContent = "LOCKED"
-                        new_btn.style.display = "";
+                        relay_override_style("{{relay.code}}")
                     }
+                    let status = document.getElementById("status_{{relay.code}}");
+                    if (status) {
+                        status.style.color = "black";
+                        status.style.backgroundColor = "#e6c846";
+                        setTimeout(function () {
+                            status.style.color = "white"
+                            status.style.backgroundColor = "black"
+                        }, 1000);
+                    }
+
                 }
             });
-          });      
+        });
     </script>
 </tr>

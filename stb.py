@@ -83,17 +83,19 @@ class Relay:
         # just here to init the latter
         self.hidden = kwargs.get('hidden', False)
         self.brain_association = kwargs.get('brain_num', -1)
+        # statuses: [unsolved, done, correct, override or wrong]
+        self.riddle_status = "unsolved"
         auto = kwargs.get('auto', True)
+        # If not auto then no riddle is associated
         if type(auto) is not bool:
             self.status = (auto == "manual_high")
             auto = False
+            self.riddle_status = "override"
         else:
             self.status = False
         self.auto = auto
         self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
-        # unsolved, done, correct or wrong
-        self.riddle_status = "unsolved"
         self.set_status(self.status)
         self.index = index
         self.auto_default = self.auto
@@ -127,7 +129,7 @@ class STB:
 
     def __load_stb(self):
         try:
-            with open('config.json') as json_file:
+            with open('example_cfgs/config 3DP.json') as json_file:
                 cfg = json.loads(json_file.read())
                 room_name = cfg["Room_name"]
                 relays = cfg["Relays"]
