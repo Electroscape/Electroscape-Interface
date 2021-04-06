@@ -4,15 +4,4 @@
             <span style="color: white;"> ROOM CONTROL INTERFACE V1.1</span>
         </span>
     </span>
-    
-    <span class="right" {% if not username %}style="visibility: hidden;"{% endif %}>
-        <form id="logout_btn" class="button" method="POST" action="">
-            <div class="button-wrapper">
-                <p>Hello, {% if username %}{{username}}{% endif %}</p>
-                <button type="submit" name="logout">
-                    logout
-                </button>
-            </div>
-        </form>
-    </span>
 </div>

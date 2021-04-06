@@ -28,7 +28,7 @@ body {
     -webkit-text-stroke: 0.5px DodgerBlue;
     color              : white;
     font-size          : 14pt;
-    padding            : 15px 0px 0px 15px;
+    padding            : 50px 0px 0px;
 }
 
 .relay_title {
@@ -118,7 +118,7 @@ div.topnav {
     font-size  : 2.5em;
     margin     : 0px 30px;
     font-weight: bold;
-    padding    : 0px 30px;
+    padding    : 30px 30px 0px 30px;
 }
 
 .left {
@@ -164,22 +164,6 @@ button:hover {
     color           : white;
     background-color: transparent;
     opacity         : 80%;
-}
-
-.button-wrapper {
-    text-align : center;
-    font-weight: normal;
-    display    : inline-block;
-}
-
-.button-wrapper p {
-    font-size  : 12pt;
-    font-weight: normal;
-}
-
-.button-wrapper button {
-    width      : 100%;
-    font-weight: normal;
 }
 
 div.relay_box {

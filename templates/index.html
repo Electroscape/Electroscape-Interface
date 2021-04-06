@@ -98,7 +98,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"
         integrity="sha512-oFOCo2/3DtjrJG4N27BjSLQWoiBv171sK6a+JiWjp/7agxC2nCUP358AqzxkBUb5jX8g6CYLPdSKQTbC0weCwA=="
         crossorigin="anonymous"></script>
-    
+
     <!-- JS code for styling functions -->
     <script src="{{url_for('static', filename='js/styling.js')}}"></script>
 </head>
@@ -119,35 +119,54 @@
                 <col span="1" style="width: 25%;">
             </colgroup>
             <thead>
-            <tr>
-                <td>
-                    <div class="header_box">
-                        {% if username.lower() == "admin" %}
+                <tr>
+                    <td>
+                        <div class="header_box">
+                            {% if username.lower() == "admin" %}
                             Admin Mode
-                        {% else %}
+                            {% else %}
                             ON
-                        {% endif %}
-                    </div>
-                </td>
-                <td>
-                    <div class="header_box">
-                        {{ room_name }}
-                    </div>
-                </td>
-                <td>
-                    <form method="POST" action="">
-                        <button type="submit" onclick="return reset_confirm();" class="button" name="reset_room"
-                            value="">RESET ROOM</button>
-                    </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="header_box">
+                            {{ room_name }}
+                        </div>
+                    </td>
+                    <td>
+                        <form method="POST" action="">
+                            <button type="submit" onclick="return reset_confirm();" class="button" name="reset_room"
+                                value="">RESET ROOM</button>
+                        </form>
 
-                    <script>
-                        function reset_confirm() {
-                            var ret = confirm("Do you really want Reset the room");
-                            return ret;
-                        }
-                    </script>
-                </td>
-            </tr>
+                        <script>
+                            function reset_confirm() {
+                                var ret = confirm("Do you really want Reset the room");
+                                return ret;
+                            }
+                        </script>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="header_box">
+                            ON
+                        </div>
+                    </td>
+                    <td>
+                        <div class="header_box">
+                            Hello, {{username | title}}
+                        </div>
+                    </td>
+                    <td>
+                        <form id="logout_btn" class="button" method="POST" action="">
+                            <button type="submit" name="logout">
+                                Logout
+                            </button>
+                        </form>
+                    </td>
+                </tr>
                 <tr>
                     <th scope="col" class="table_header">Riddle</th>
                     <th scope="col" class="table_header">Input</th>
@@ -156,9 +175,9 @@
             </thead>
             <tbody>
                 {% for relay in relays %}
-                    {% if not relay.hidden or username.lower() == "admin" %}
-                        {% include '_relay.html' %}
-                    {% endif %}
+                {% if not relay.hidden or username.lower() == "admin" %}
+                {% include '_relay.html' %}
+                {% endif %}
                 {% endfor %}
             </tbody>
         </table>
