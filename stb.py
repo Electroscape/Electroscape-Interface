@@ -67,13 +67,12 @@ class Relay:
     def set_riddle_status(self, status):
         self.riddle_status = status
 
-    def __init__(self, index, **kwargs):
+    def __init__(self, auto_index, **kwargs):
         relay_num = kwargs.get('relay_num', -1)
         assert (0 <= relay_num <= 7), "Relay number should be from 0 to 7"
-        # inverse mapping for the PCF library
-        self.relay_no = [*range(7, -1, -1)].index(relay_num)
+        self.index = relay_num
         self.name = kwargs.get('name', "Extra")
-        self.code = kwargs.get('code', "XX"+str(index))
+        self.code = kwargs.get('code', "XX"+str(auto_index))
         self.active_high = kwargs.get('active_high', True)
         self.text_on = kwargs.get('text_on', "ON")
         self.text_off = kwargs.get('text_off', "OFF")
@@ -97,7 +96,6 @@ class Relay:
         self.first_message = kwargs.get('first_message', "No Input")
         self.last_message = kwargs.get('first_message', "No Input")
         self.set_status(self.status)
-        self.index = index
         self.auto_default = self.auto
 
 
@@ -181,7 +179,7 @@ class STB:
         # since the creating the instances does fail silently let's check
         # Get pin value from relay_no attr in relay instance
         for relay in self.relays:
-            pin = relay.relay_no
+            pin = 7 - relay.index
             self.__read_pcf(relay)
             try:
                 relay.set_status(self.pcf_write.port[pin])
@@ -198,7 +196,7 @@ class STB:
 
     def __read_pcf(self, relay, read_pcf_write=False):
         ret = relay.status
-        pin = relay.relay_no
+        pin = 7 - relay.index
         try:
             if read_pcf_write:
                 ret = bool(self.pcf_write.port[pin])
@@ -240,7 +238,7 @@ class STB:
         if status is None or type(status) is not bool:
             status = not relay.status
         print("setting relay {} to status {}".format(relay_code, status))
-        self.__write_pcf(relay.relay_no, relay.status)
+        self.__write_pcf(relay.index, relay.status)
         relay.set_status(status)
         relay.set_riddle_status("override")
 
@@ -421,7 +419,7 @@ class STB:
                     self.updates.insert(
                         0, [relay.code, relay.status_frontend, relay.riddle_status])
 
-                self.__write_pcf(relay.relay_no, new_status)
+                self.__write_pcf(relay.index, new_status)
 
         # self.__add_serial_lines(["counter is at {}".format(counter)])
         for recv_socket in recv_sockets:
