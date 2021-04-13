@@ -31,6 +31,10 @@ simply update the venv location in env/bin/activate
 line 40 VIRTUAL_ENV="/home/pi/TE/Electroscape-Interface/env"
 to whatever is local to you
 
+define the flask_env on linux
+`export FLASK_ENV=production` or with `export FLASK_ENV=development`
+to check the current env `echo $FLASK_ENV`
+
 project contains shellscripts to launch from,
 those can be made executeable with chmod +x myfile
 
