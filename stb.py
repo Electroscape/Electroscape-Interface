@@ -250,8 +250,11 @@ class STB:
             self.user, relay.name, status))
 
         if relay.brain_association >= 0:
-            logger_socket.transmit("!log: {}".format(
-                self.brains[relay.brain_association].name))
+            try:
+                logger_socket.transmit("!log: {}".format(
+                    self.brains[relay.brain_association].name))
+            except IndexError:
+                print("\n Invalid brain association for relay {}".format(relay.brain_association))
 
     def restart_all_brains(self, *_):
         txt = "\n\nroom has been reset by user {}\n\n".format(self.user)
