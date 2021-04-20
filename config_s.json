@@ -36,7 +36,7 @@
       "active_high": false,
       "code": "UVL",
       "answer": "C1 C2 C3",
-      "brain_num": 4
+      "brain_num": 3
     },
     {
       "relay_num": 3,
