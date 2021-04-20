@@ -104,7 +104,7 @@ class Brain:
         self.name = name
         associated_relays = []
         for relay in relays:
-            if relay.brain_association == brain_no + 1:
+            if relay.brain_association == brain_no:
                 associated_relays.append(relay.index)
         self.associated_relays = associated_relays
         self.reset_pin = reset_pin
@@ -254,7 +254,8 @@ class STB:
                 logger_socket.transmit("!log: {}".format(
                     self.brains[relay.brain_association].name))
             except IndexError:
-                print("\n Invalid brain association for relay {}".format(relay.brain_association))
+                print("\n Invalid brain association for relay {} {}".format(
+                    relay.brain_association, relay.name))
 
     def restart_all_brains(self, *_):
         txt = "\n\nroom has been reset by user {}\n\n".format(self.user)
@@ -270,10 +271,12 @@ class STB:
             pins.append(brain.reset_pin)
 
         for relay_index in relays_to_reset:
-            relay = self.relays[relay_index]
-            relay.set_riddle_status("unsolved")
-            relay.set_auto(relay.auto_default)
-            relay.last_message = relay.first_message
+            for relay in self.relays:
+                if relay.index == relay_index:
+                    relay.set_riddle_status("unsolved")
+                    relay.set_auto(relay.auto_default)
+                    relay.last_message = relay.first_message
+                    break
 
         thread = Thread(target=brain_restart_thread, args=(self.GPIO, pins,))
         thread.start()
