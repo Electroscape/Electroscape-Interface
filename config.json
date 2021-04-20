@@ -61,7 +61,7 @@
       "code": "LI2",
       "answer": "N/A",
       "hidden": true,
-      "brain_num": 0
+      "brain_num": 2
     },
     {
       "relay_num": 4,
@@ -69,7 +69,7 @@
       "code": "XX1",
       "answer": "N/A",
       "active_high": true,
-      "auto": false,
+      "auto": "manual_high",
       "hidden": true,
       "text_on": "ON",
       "text_off": "OFF",
@@ -78,10 +78,10 @@
     }
   ],
   "Brains": [
-    [ "Keypads", 24],
-    [ "COLOR_CODE", 25],
-    [ "CUBES", 26],
-    [ "SECRET_DOOR", 27]
+    [ "Keypads", 22],
+    [ "COLOR_CODE", 23],
+    [ "CUBES", 24],
+    [ "SECRET_DOOR", 25]
   ],
   "Translation_Dict": {
     "translate_this": "translate_that"

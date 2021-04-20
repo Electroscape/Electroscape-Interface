@@ -78,10 +78,10 @@
     }
   ],
   "Brains": [
-    [ "Exit_Light_Alarm", 27],
-    [ "Secret_Door", 24],
-    [ "Colour_Code", 25],
-    [ "Cubes", 26]
+    [ "Exit_Light_Alarm", 22],
+    [ "Secret_Door", 23],
+    [ "Colour_Code", 24],
+    [ "Cubes", 25]
   ],
   "Translation_Dict": {
     "C1": "Zylinder",
