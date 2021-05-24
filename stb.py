@@ -234,9 +234,7 @@ class STB:
         # Relay codes should be key parameter
         relay = [r for r in self.relays if r.code == relay_code][0]
 
-        # if we pass nothing we flip the relay
-        if status is None or type(status) is not bool:
-            status = not relay.status
+        status = not relay.status
         print("setting relay {} to status {}".format(relay_code, status))
         self.__write_pcf(relay.index, relay.status)
         relay.set_status(status)
