@@ -1,17 +1,15 @@
-from glob import glob
 import serial
 import serial.rs485
-from time import sleep
 
 print("v0.3")
-baud = 9600
+baud = 115200
 
 # ports = glob('/dev/serial0')
 
 try:
     ser = serial.Serial(
         port='/dev/serial0',
-        baudrate = 9600,
+        baudrate = baud,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,

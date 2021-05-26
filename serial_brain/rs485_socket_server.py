@@ -69,11 +69,11 @@ def read_serial(ser):
 
 def connect_serial():
     while True:
-        ports = glob('/dev/ttyUSB[0-9]') + glob('/dev/serial[0-1]')
+        ports = glob('/dev/ttyUSB[0-9]') + glob('/dev/serial0')
         for usb_port in ports:
             try:
                 ser = serial.rs485.RS485(port=usb_port, baudrate=baud)
-                print("serial found!")
+                print(f"serial found! {usb_port}")
                 return ser
             except OSError as err:
                 if err.errno == 13:
