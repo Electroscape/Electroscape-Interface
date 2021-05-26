@@ -31,11 +31,11 @@ logger_socket = None
 
 def brain_restart_thread(gpio, reset_pins):
     for reset_pin in reset_pins:
-        gpio.output(reset_pin, True)
+        gpio.output(reset_pin, gpio.LOW)
     print("Restarting ...")
-    sleep(0.5)
+    sleep(1)
     for reset_pin in reset_pins:
-        gpio.output(reset_pin, False)
+        gpio.output(reset_pin, gpio.HIGH)
     print("Done")
 
 
@@ -127,7 +127,7 @@ class STB:
 
     def __load_stb(self):
         try:
-            with open('example_cfgs/config 3DP.json') as json_file:
+            with open('config.json') as json_file:
                 cfg = json.loads(json_file.read())
                 room_name = cfg["Room_name"]
                 relays = cfg["Relays"]
@@ -225,7 +225,7 @@ class STB:
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         for brain in self.brains:
-            GPIO.setup(brain.reset_pin, GPIO.OUT, initial=False)
+            GPIO.setup(brain.reset_pin, GPIO.OUT, initial=GPIO.HIGH)
         return GPIO
 
     # changes from the frontend applied to the GPIO pins
@@ -389,7 +389,7 @@ class STB:
                 if match('!', msg) is None:
                     msg = self.__msg_translate(msg)
                     relay.last_message = msg
-                    print("updating last_message to: {}".format(msg))
+                    print("updating {} last_message to: {}".format(relay.code, msg))
                     lines[index] = msg
                 else:
                     msg = msg.lower()
