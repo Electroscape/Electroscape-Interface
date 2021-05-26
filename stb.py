@@ -236,7 +236,7 @@ class STB:
 
         status = not relay.status
         print("setting relay {} to status {}".format(relay_code, status))
-        self.__write_pcf(relay.index, relay.status)
+        self.__write_pcf(relay.index, status)
         relay.set_status(status)
         relay.set_riddle_status("override")
 
