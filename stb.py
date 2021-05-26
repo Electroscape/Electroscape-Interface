@@ -345,7 +345,7 @@ class STB:
             if match(self.settings.brain_tag, line) is None:
                 print("no braintag, discarding")
                 continue
-            if search("Done.*$", line) is None:
+            if search("Done\.$", line) is None:
                 print("incomplete message, discarding")
                 continue
 
