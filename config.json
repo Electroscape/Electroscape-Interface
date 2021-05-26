@@ -8,7 +8,7 @@
       "active_high": true,
       "auto": true,
       "hidden": false,
-      "answer": "1704",
+      "answer": "1708",
       "brain_num": 0
     },
     {
@@ -17,6 +17,7 @@
       "code": "FPK",
       "brain_num": 1,
       "answer": "1234",
+      "active_high": false,
       "text_on": "OPEN",
       "text_off": "CLOSED"
     },
@@ -26,7 +27,7 @@
       "code": "HID",
       "brain_num": 3,
       "active_high": false,
-      "answer": "RGWB",
+      "answer": "RGGBWGRBWG",
       "text_on": "VISIBLE",
       "text_off": "HIDDEN"
     },
@@ -51,8 +52,9 @@
       "name": "Exit",
       "code": "EXT",
       "brain_num": 0,
-      "answer": "8231984",
+      "answer": "2381984",
       "text_on": "OPEN",
+      "active_high": false,
       "text_off": "CLOSED"
     },
     {
