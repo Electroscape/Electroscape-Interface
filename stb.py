@@ -30,13 +30,13 @@ logger_socket = None
 
 
 def brain_restart_thread(gpio, reset_pins):
+    print("Restarting ...")
     for reset_pin in reset_pins:
         gpio.output(reset_pin, gpio.LOW)
-        print(f"Resetting pin {reset_pin}")
-    print("Restarting ...")
-    sleep(1)
-    for reset_pin in reset_pins:
+        sleep(0.5)
         gpio.output(reset_pin, gpio.HIGH)
+        sleep(0.1)
+
     print("Done")
 
 
