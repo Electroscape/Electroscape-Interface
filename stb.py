@@ -78,6 +78,7 @@ class Relay:
         self.text_on = kwargs.get('text_on', "ON")
         self.text_off = kwargs.get('text_off', "OFF")
         self.answer = kwargs.get('answer', "N/A")
+        self.lock_status = kwargs.get('lock_status', None)
         self.auto_frontend = "true"
         # this just is a function used to set the frontend to the same as backend,
         # just here to init the latter
@@ -231,9 +232,15 @@ class STB:
 
     # changes from the frontend applied to the GPIO pins
     def override_relay(self, relay_code, status=None, test=None):
+
         print("set_relay vars {} {} {}".format(relay_code, status, test))
         # Relay codes should be key parameter
         relay = [r for r in self.relays if r.code == relay_code][0]
+
+        print(relay.lock_status)
+        if relay.lock_status is relay.status:
+            print("cannot override")
+            return
 
         status = not relay.status
         print("setting relay {} to status {}".format(relay_code, status))

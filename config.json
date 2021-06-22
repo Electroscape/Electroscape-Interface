@@ -1,5 +1,5 @@
 {
-  "Room_name": "HH1 Lab - Gallery Stuttgart",
+  "Room_name": "Gallery Stuttgart",
   "Relays": [
     {
       "relay_num": 0,
@@ -16,7 +16,8 @@
       "name": "Fireplace",
       "code": "FPK",
       "brain_num": 1,
-      "answer": "1234",
+      "answer": "5314",
+      "lock_status": true,
       "active_high": false,
       "text_on": "OPEN",
       "text_off": "CLOSED"
@@ -28,6 +29,7 @@
       "brain_num": 3,
       "active_high": false,
       "answer": "RGGBWGRBWG",
+      "lock_status": true,
       "text_on": "VISIBLE",
       "text_off": "HIDDEN"
     },
