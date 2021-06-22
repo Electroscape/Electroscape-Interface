@@ -5,7 +5,7 @@
       "relay_num": 0,
       "name": "Light",
       "code": "LIT",
-      "active_high": true,
+      "active_high": false,
       "auto": true,
       "hidden": false,
       "answer": "1708",
