@@ -189,6 +189,7 @@ class STB:
                 self.error = "Error with write PCF"
 
     def __write_pcf(self, pin, value):
+        pin = 7 - pin
         try:
             self.pcf_write.port[pin] = value
         except IOError:
