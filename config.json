@@ -1,17 +1,94 @@
 {
-  "Room_name": "HH2 Lab - Gallery Stuttgart",
-  "Relays are Name, Active High, Auto, Hidden, BrainNo (Physical stuff is Indexed from 1)": "",
+  "Room_name": "Gallery Stuttgart",
   "Relays": [
-    ["Light", true, true, false, 1],
-    ["Fire place", true, true, false, 1],
-    ["Safe", true, true, false, 1],
-    ["UV Light", true, true, false, 1],
-    ["Alarm", true, true, true, 1],
-    ["Exit", true, true, true, 1],
-    ["Extra_3", true, true, true, 1],
-    ["Extra_4", true, true, true, 1]
-
+    {
+      "relay_num": 0,
+      "name": "Light",
+      "code": "LIT",
+      "active_high": false,
+      "auto": true,
+      "hidden": false,
+      "answer": "1708",
+      "brain_num": 0
+    },
+    {
+      "relay_num": 5,
+      "name": "Fireplace",
+      "code": "FPK",
+      "brain_num": 1,
+      "answer": "5314",
+      "lock_status": true,
+      "active_high": false,
+      "text_on": "OPEN",
+      "text_off": "CLOSED"
+    },
+    {
+      "relay_num": 6,
+      "name": "Safe",
+      "code": "HID",
+      "brain_num": 3,
+      "active_high": false,
+      "answer": "RGGBWGRBWG",
+      "lock_status": true,
+      "text_on": "VISIBLE",
+      "text_off": "HIDDEN"
+    },
+    {
+      "relay_num": 2,
+      "name": "UV Light",
+      "active_high": false,
+      "code": "UVL",
+      "answer": "C1 C2 C3",
+      "brain_num": 2
+    },
+    {
+      "relay_num": 3,
+      "name": "Alarm",
+      "code": "ALA",
+      "brain_num": 0,
+      "answer": "N/A",
+      "first_message": "COMPASS IN SAFE"
+    },
+    {
+      "relay_num": 7,
+      "name": "Exit",
+      "code": "EXT",
+      "brain_num": 0,
+      "answer": "2381984",
+      "text_on": "OPEN",
+      "active_high": false,
+      "text_off": "CLOSED"
+    },
+    {
+      "relay_num": 1,
+      "name": "Light 2nd Room",
+      "code": "LI2",
+      "answer": "N/A",
+      "hidden": true,
+      "brain_num": 2
+    },
+    {
+      "relay_num": 4,
+      "name": "Extra_1",
+      "code": "XX1",
+      "answer": "N/A",
+      "active_high": true,
+      "auto": "manual_high",
+      "hidden": true,
+      "text_on": "ON",
+      "text_off": "OFF",
+      "first_message": "No Input",
+      "brain_num": -1
+    }
   ],
-  "Brains": [["Keypads", 24], ["Skulpturen", 25], ["Exit", 26], ["Sicherung", 27]],
+  "Brains": [
+    [ "Keypads", 22],
+    [ "COLOR_CODE", 23],
+    [ "CUBES", 24],
+    [ "SECRET_DOOR", 25]
+  ],
+  "Translation_Dict": {
+    "translate_this": "translate_that"
+  },
   "Serial_line_limit": 80
 }

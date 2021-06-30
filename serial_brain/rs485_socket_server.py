@@ -2,22 +2,33 @@
 # 2CP - TeamEscape - Engineering
 
 from socketServer import SocketServer
+from pathlib import Path
 import json
 from glob import glob
+import serial
 import serial.rs485
 from time import sleep
-import RPi.GPIO as GPIO     # to control drive/read enable MAX485
-
-
 try:
-    with open('serial_config.json') as json_file:
-        cfg = json.loads(json_file.read())
-        baud = cfg["baud"]
-        socket_port = cfg["serial_port"]
-        rs_ctrl_pin = cfg["rs_ctrl_pin"]    # Broadcom pin 26
-except ValueError as e:
-    print('failure to read serial_config.json')
-    print(e)
+    import RPi.GPIO as GPIO     # to control drive/read enable MAX485
+except ModuleNotFoundError:
+    print("Non PiEnv using GPIO emulator")
+    from GPIOEmulator.EmulatorGUI import GPIO
+
+baud = None
+for file_name in ['serial_brain/serial_config.json', 'serial_config.json']:
+    if Path(file_name).is_file():
+        try:
+            with open(file_name) as json_file:
+                cfg = json.loads(json_file.read())
+                baud = cfg["baud"]
+                socket_port = cfg["serial_port"]
+                rs_ctrl_pin = cfg["rs_ctrl_pin"]    # Broadcom pin 26
+        except ValueError as e:
+            print('failure to read serial_config.json')
+            print(e)
+            exit()
+if baud is None:
+    print("serial_config not found")
     exit()
 
 
@@ -41,7 +52,7 @@ def handle_serial(ser):
 
 def read_serial(ser):
     try:
-        line = str(ser.readline())  #[2:][:-5]
+        line = str(ser.readline())[2:][:-5]
         # line = line.decode()
         print(line)
         return line
@@ -62,7 +73,7 @@ def connect_serial():
         for usb_port in ports:
             try:
                 ser = serial.rs485.RS485(port=usb_port, baudrate=baud)
-                print("serial found!")
+                print(f"serial found! {usb_port}")
                 return ser
             except OSError as err:
                 if err.errno == 13:
@@ -70,9 +81,6 @@ def connect_serial():
                 print(err)
         print("no serial found, checking again")
         sleep(0.5)
-
-
-sock = SocketServer(socket_port)
 
 
 def main():
@@ -87,7 +95,6 @@ def main():
         GPIO.cleanup()
 
 
-main()
-
-
-
+if __name__ == "__main__":
+    sock = SocketServer(socket_port)
+    main()

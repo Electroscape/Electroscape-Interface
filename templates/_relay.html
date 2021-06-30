@@ -3,73 +3,76 @@
 </tr>
 <tr>
     <th scope="row">
-        <div class="relay_status">
+        <div class="relay_status" id="status_{{relay.code}}">
             {{relay.status_frontend}}
-        </div> 
+        </div>
     </th>
     <td>
-        <div class="riddle_input">
-            No Input
-        </div> 
-    </td>
-
-    <!-- make into a headline/div
-    
-    <th scope="row">{{relay.name}}</th>
-    <td>
-        <form id="switch_override" method="POST" action="">
-            <input type="checkbox"
-                   id="relay_{{relay.index}}_override"
-                   name="relayOverride_{{relay.index}}"
-                   onClick="this.form.submit();">
-            <input type="hidden"
-                   id="relay_{{relay.index}}_override_hidden"
-                   name="relayOverride_{{relay.index}}">
+        <form method="POST" action="" id="onOff_{{relay.code}}">
+            <button
+                type="submit" 
+                class="btn_override" 
+                id="btn_onOff_{{relay.code}}" 
+                name="relayOverride_{{relay.code}}"
+                style="display: none;">
+                Toggle Relay
+            </button>
         </form>
+        <div class="riddle_solution" id="solution_{{relay.code}}">
+            {{relay.answer}}
+        </div>
+        <div class="riddle_input" id="input_{{relay.code}}">
+            Loading...
+        </div>
     </td>
-    -->
-
-
-    <script>
-        // update the checkbox values, who thought mixing a bunch of languages is fun
-        var box = document.getElementById("relay_{{relay.index}}_override");
-        console.log("value of relay is: " + '{{relay.auto_frontend}}');
-        // box.checked = {{relay.auto_frontend}};
-        // console.log(box.checked);
-    </script>
-
-
-
-
-        <!--
-        <select name="mode" class=relay.mode form="leave">
-            <option value="0">auto</option>
-            <option value="1">manual</option>
-        </select>
-        -->
-    <script>
-        function override_check(form, mode) {
-            console.log("override_check")
-            console.log("relay mode is: " + mode)
-            form.form.submit();
-            if (mode) {
-                //alert("Uncheck Auto")
-            } else {
-                //form.form.submit();
-            }
-
-        }
-        // "this.form.submit();"
-    </script>
     <td>
-        <form id="switch_relay" method="POST" action="">
-            <button class="status" type="button"
-                style="background-color:'{{relay.btn_clr_frontend}}'"
-                name="relaySetStatus_{{relay.index}}"
-                onClick="override_check(this, '{{relay.auto_frontend}}')"
+        <form method="POST" action="" id="form_{{relay.code}}">
+            <button 
+                type="submit" 
+                class="btn_override" 
+                id="btn_{{relay.code}}"
+                name="relayOverride_{{relay.code}}"
             >Override</button>
-        <input type="hidden" name="relaySetStatus_{{relay.index}}">
         </form>
     </td>
 
+    <!-- Handle override press-->
+    <script>
+        postload_styling('{{relay.code}}', '{{relay.last_message}}', '{{relay.riddle_status}}')
+        
+        $("#form_{{relay.code}},#onOff_{{relay.code}}").submit(function (e) {
+            //prevent submit
+            e.preventDefault();
+            var Id = this.id;
+            //do things on submit
+            $.ajax({
+                data: "relayOverride_{{relay.code}}",
+                type: "POST",
+                beforeSend: function () {
+                    //before send data
+                    console.log("pressed by {{Id}}");
+                    if (Id == "form_{{relay.code}}") {
+                        return confirm("Are you sure you want to override?");
+                    }
+                },
+                success: function () {
+                    // the data
+                    console.log("post {{relay.code}} override successfully");
+                    if (Id == "form_{{relay.code}}") {
+                        relay_override_style("{{relay.code}}")
+                    }
+                    let status = document.getElementById("status_{{relay.code}}");
+                    if (status) {
+                        status.style.color = "black";
+                        status.style.backgroundColor = "#e6c846";
+                        setTimeout(function () {
+                            status.style.color = "gray"
+                            status.style.backgroundColor = "black"
+                        }, 1000);
+                    }
+
+                }
+            });
+        });
+    </script>
 </tr>

@@ -1,158 +1,180 @@
 h2 {
     font-weight: bold;
-    font-size: 1.5em;
+    font-size  : 1.5em;
 }
+
 h3 {
     font-weight: bold;
-    font-size: 1em;
+    font-size  : 1em;
 }
+
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: rgb(30,30,30);
-    color: #E6C846;
-    padding: 20px 20px;
+    font-family     : 'Montserrat', sans;
+    background-color: black;
+    color           : gray;
+    padding         : 20px 20px;
 }
 
 .relays_table {
-    width: 100%;
-    max-width: 900px;
-    padding: 0px 15px;
+    width          : 100%;
+    max-width      : 750px;
+    padding        : 0px 15px;
+    margin         : 30px;
     border-collapse: separate;
 }
 
-.relay_title{
-    font-size: 16pt;
-    padding-top: 0.5em;
-    padding-bottom: 0.1em;
+.table_header {
+    text-align         : center;
+    -webkit-text-stroke: 0.5px DodgerBlue;
+    color              : white;
+    font-size          : 14pt;
+    padding            : 50px 0px 0px;
 }
 
-.relay_status{
-    background-color: black;
-    color: white;
-    padding: 10px;
-    margin: 10px 50px 10px 10px;
-    text-align: center;
-    border-style: solid;
-    border-color: rgb(201, 76, 76);
+.relay_title {
+    font-size: 12pt;
+    color    : gray;
+    padding  : 25px 0px 0px 15px;
 }
 
-.riddle_input{
+.relay_status {
     background-color: black;
-    color: white;
-    padding: 10px;
-    margin: 10px 50px 10px 10px;
-    text-align: center;
-    border-style: solid;
-    border-color: #555;
+    color           : gray;
+    padding         : 10px;
+    margin          : 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : #555;
 }
 
-.ON_Box{
+.riddle_input {
     background-color: black;
-    color: white;
-    padding: 10px;
-    margin-inline: 20px;
-    text-align: center;
-    border-style: solid;
-    border-color: green;
-    width: 25%;
+    color           : gray;
+    padding         : 10px;
+    margin          : 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : #555;
+}
+
+.riddle_solution {
+    position        : absolute;
+    opacity         : 50%;
+    background-color: black;
+    color           : gray;
+    padding         : 10px;
+    margin          : 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : #555;
+    min-width       : 80px;
+    display         : none;
+}
+
+.btn_override[disabled] {
+    cursor          : not-allowed;
+    opacity         : 0.75;
+    color           : #555;
+    background-color: black;
+}
+
+.ON_Box {
+    background-color: black;
+    color           : gray;
+    padding         : 10px;
+    margin          : 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : green;
+    width           : 25%;
 }
 
 .header_box {
     background-color: black;
-    color: white;
-    padding: 10px;
-    margin-inline: 20px;
-    text-align: center;
-    border-style: solid;
-    border-color: green; 
+    color           : gray;
+    padding         : 10px;
+    margin          : 10px;
+    text-align      : center;
+    border-style    : solid;
+    border-color    : green;
 }
 
-td, th {
+td,
+th {
     border-spacing: 0px 15px;
-    padding: 0px 5px;
+    padding       : 0px 5px;
 }
 
 div.log {
-    width: 900px;
+    width     : 900px;
     max-height: 300px;
-    overflow: auto;
-    padding: 0px 30px;
+    overflow  : auto;
+    padding   : 0px 30px;
 }
 
 div.topnav {
-    width: 100%;
-    overflow: hidden;
-    margin-top: 0;
-    margin-left: 0;
-    /* background-color: rgb(30,30,30); */
-    font-size: 2.5em;
-    margin: auto;
+    width      : 100%;
+    overflow   : hidden;
+    font-size  : 2.5em;
+    margin     : 0px 30px;
     font-weight: bold;
-    padding: 0px 30px;
+    padding    : 30px 30px 0px 30px;
 }
 
-.left{
-    font-size: 0.75em;
-    display: table-cell;
+.left {
+    font-size     : 16pt;
+    display       : table-cell;
     vertical-align: middle;
 }
 
 .right {
     font-size: 0.75em;
-    float: right;
+    float    : right;
 }
 
 .dropdown {
-    padding: 0px 15px;
-    position: relative;
+    padding         : 0px 15px;
+    position        : relative;
     background-color: #E6C846;
-    color: black;
+    color           : black;
 }
 
 .dropdown-content {
-    font-weight: normal;
-    display: none;
-    position: relative;
+    font-weight     : normal;
+    display         : none;
+    position        : relative;
     background-color: #E6C846;
 }
 
 .dropdown:hover .dropdown-content {
     font-weight: normal;
-    display: block;
+    display    : block;
 }
 
 button {
-    background-color: #E6C846;
-    font-weight: bold;
-    color: black;
-    padding: 10px 30px;
+    background-color: #555;
+    font-weight     : bold;
+    color           : gray;
+    padding         : 10px 30px;
+    width           : 100%;
+    transition      : all .23s ease;
 }
 
-.button-wrapper {
-    text-align:center;
-    font-weight: normal;
-    display:inline-block;
-}
-
-.button-wrapper p{
-    font-size: 12pt;
-    font-weight: normal;
-}
-
-.button-wrapper button{
-    width: 100%;
-    font-weight: normal;
-}
-.status {
-    background-color: #E6C846;
-    color: black;
+button:hover {
+    color           : white;
+    background-color: transparent;
+    opacity         : 80%;
 }
 
 div.relay_box {
-    background-color: rgb(30,30,30);
-    display: inline;
-    padding: 0px 30px;
-    margin: 10px;
+    background-color: rgb(30, 30, 30);
+    display         : inline;
+    padding         : 0px 30px;
+    margin          : 10px;
+}
+
+#serial_log {
+    color: whitesmoke;
 }
 
 div.brain_restarts {
@@ -160,91 +182,13 @@ div.brain_restarts {
 }
 
 span.brain_box {
-    background-color: rgb(30,30,30);
-    display: inline;
-    padding: 0px 30px;
-    margin: 10px;
+    background-color: rgb(30, 30, 30);
+    display         : inline;
+    padding         : 0px 30px;
+    margin          : 10px;
 }
 
 input[type="checkbox"] {
     vertical-align: middle;
-    padding-left: 15px
+    padding-left  : 15px
 }
-
-.group {
-    display: flex;
-    align-items: center;
-    width: 60%;
-}
-
-.group input[type="submit"] {
-  width: 25%;
-}
-
-#name {
-    width: 100%;
-    padding-inline: 0px;
-    text-align: center;
-    border-color: gray;
-    color: white;
-}
-
-.group input {
-  display: block;
-  border: 1px solid gray;
-  color:white;
-  font-size: 14px;
-  height: 35px;
-  margin-top: 5px;
-  padding: 0 8px;
-  background-color: black;
-  transition: all .23s ease;
-}
-
-.group input:focus {
-  box-shadow: 0 0 5px 1px gold;
-  outline: none;
-}
-input[type="submit"][hidden] {
-  opacity: 0;
-  visibility: hidden;
-}
-
-input[type="submit"]:hover{
-    background-color: transparent;
-}
-
-.autocomplete {
-    /*the container must be positioned relative:*/
-    position: relative;
-    display: inline-block;
-    margin-inline: 20px;
-}
-
-.autocomplete-items {
-    color: black;
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    border-bottom: none;
-    border-top: none;
-    z-index: 99;
-    /*position the autocomplete items to be the same width as the container:*/
-    top: 100%;
-    left: 0;
-    right: 0;
-  }
-  .autocomplete-items div {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #fff;
-    border-bottom: 1px solid #d4d4d4;
-  }
-  .autocomplete-items div:hover {
-    /*when hovering an item:*/
-    background-color: #e9e9e9;
-  }
-  .autocomplete-active {
-    /*when navigating through the items using the arrow keys:*/
-    background-color: DodgerBlue !important;
-    color: #ffffff;
-  }

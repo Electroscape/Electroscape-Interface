@@ -1,28 +1,61 @@
 {
-  "Room_name": "3D Drucker",
-  "Relays are Name, Active High, Auto, Hidden, BrainNo (Physical stuff is Indexed from 1)": "",
+  "Room_name": "HH1 Lab - Gallery Stuttgart",
   "Relays": [
-    ["Drucker", true, true, false, 1],
-    ["Lüfter", true, true, false, 1],
-    ["Kamera", true, true, false, 1],
-    ["Licht", true, true, false, 1],
-    ["Extra_1", true, true, true, 1],
-    ["Extra_2", true, true, true, 1],
-    ["Extra_3", true, true, true, 1],
-    ["Extra_4", true, true, true, 1]
-
+    {
+      "relay_num": 0,
+      "name": "Drucker",
+      "active_high": true,
+      "auto": "manual_low",
+      "brain_num": -1
+    },
+    {
+      "relay_num": 1,
+      "name": "Luefter",
+      "active_high": true,
+      "auto": "manual_low",
+      "brain_num": -1
+    },
+    {
+      "relay_num": 2,
+      "name": "Kamera",
+      "active_high": true,
+      "auto": "manual_high",
+      "brain_num": -1
+    },
+    {
+      "relay_num": 3,
+      "name": "Licht",
+      "active_high": true,
+      "auto": "manual_low",
+      "brain_num": -1
+    },
+    {
+      "relay_num": 4,
+      "name": "Heizung",
+      "active_high": true,
+      "auto": "manual_low",
+      "brain_num": -1
+    },
+    {
+      "relay_num": 5,
+      "name": "Empty_1",
+      "hidden": true,
+      "brain_num": -1
+    },
+    {
+      "relay_num": 6,
+      "name": "Empty_2",
+      "hidden": true,
+      "brain_num": -1
+    },
+    {
+      "relay_num": 7,
+      "name": "Empty_3",
+      "hidden": true,
+      "brain_num": -1
+    }
   ],
-  "Brains": [["Keypads", 24], ["Skulpturen", 25], ["Exit", 26], ["Sicherung", 27]],
-  "Pins_IO": [
-    [12, 4],
-    [16, 17],
-    [6, 27],
-    [13, 22],
-    [8, 23],
-    [9, 24],
-    [12, 25],
-    [11, 5]
-  ],
-  "Master_reset": 18,
-  "Serial_line_limit": 50
+  "Brains": [],
+  "Translation_Dict": {},
+  "Serial_line_limit": 80
 }
