@@ -99,6 +99,7 @@ class Relay:
         self.last_message = kwargs.get('first_message', "No Input")
         self.set_status(self.status)
         self.auto_default = self.auto
+        self.input_cache = []
 
 
 class Brain:
@@ -403,6 +404,9 @@ class STB:
                 else:
                     msg = msg.lower()
                     if match('!reset', msg) is not None:
+                        relay.input_cache.insert(0, relay.last_message)
+                        # limiting the size, we don't need 20 wrong answers
+                        relay.input_cache = relay.input_cache[:5]
                         relay.last_message = relay.first_message
                     relay.riddle_status = msg[1:]
         return lines
