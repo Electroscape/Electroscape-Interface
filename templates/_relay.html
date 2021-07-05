@@ -9,11 +9,7 @@
     </th>
     <td>
         <form method="POST" action="" id="onOff_{{relay.code}}">
-            <button
-                type="submit" 
-                class="btn_override" 
-                id="btn_onOff_{{relay.code}}" 
-                name="relayOverride_{{relay.code}}"
+            <button type="submit" class="btn_override" id="btn_onOff_{{relay.code}}" name="relayOverride_{{relay.code}}"
                 style="display: none;">
                 Toggle Relay
             </button>
@@ -27,19 +23,16 @@
     </td>
     <td>
         <form method="POST" action="" id="form_{{relay.code}}">
-            <button 
-                type="submit" 
-                class="btn_override" 
-                id="btn_{{relay.code}}"
-                name="relayOverride_{{relay.code}}"
-            >Override</button>
+            <button type="submit" class="btn_override" id="btn_{{relay.code}}"
+                name="relayOverride_{{relay.code}}">Override</button>
         </form>
     </td>
 
     <!-- Handle override press-->
     <script>
-        postload_styling('{{relay.code}}', '{{relay.last_message}}', '{{relay.riddle_status}}')
-        
+        postload_styling('{{relay.code}}', '{{relay.last_message}}', '{{relay.riddle_status}}',
+            "{{relay.lock_status}}".replace("None", ""))
+
         $("#form_{{relay.code}},#onOff_{{relay.code}}").submit(function (e) {
             //prevent submit
             e.preventDefault();
@@ -59,7 +52,8 @@
                     // the data
                     console.log("post {{relay.code}} override successfully");
                     if (Id == "form_{{relay.code}}") {
-                        relay_override_style("{{relay.code}}")
+                        lock = "{{relay.lock_status}}".replace("None", "")
+                        relay_override_style("{{relay.code}}", lock)
                     }
                     let status = document.getElementById("status_{{relay.code}}");
                     if (status) {

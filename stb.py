@@ -239,7 +239,9 @@ class STB:
         # Relay codes should be key parameter
         relay = [r for r in self.relays if r.code == relay_code][0]
 
+        relay.set_riddle_status("override")
         print(relay.lock_status)
+
         if relay.lock_status is relay.status:
             print("cannot override")
             return
@@ -248,7 +250,6 @@ class STB:
         print("setting relay {} to status {}".format(relay_code, status))
         self.__write_pcf(relay.index, status)
         relay.set_status(status)
-        relay.set_riddle_status("override")
 
         # stop mirroring once override
         relay.set_auto(False)
@@ -330,7 +331,8 @@ class STB:
             data.append({
                 "code": rel.code,
                 "riddle_status": rel.riddle_status,
-                "last_message": rel.last_message
+                "last_message": rel.last_message,
+                "lock_status": rel.lock_status
             })
         return data
 
