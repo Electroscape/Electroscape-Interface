@@ -53,6 +53,7 @@ function riddle_correct_solution(code, fireworks = true) {
     let inp = document.getElementById("input_" + code);
     let sol = document.getElementById("solution_" + code);
     let btn = document.getElementById("btn_" + code);
+
     if (inp && sol && btn) {
         inp.style.borderColor = "green";
         sol.style.display = "none"
@@ -90,4 +91,12 @@ function postload_styling(code, last_msg, riddle_status, lock) {
         lock_status: lock
     };
     riddle_update_frontend([relay]);
+
+    // update relay status to green if found correct
+    if (riddle_status == 'correct' || riddle_status == 'done') {
+        let rel_status = document.getElementById("status_" + code);
+        if (rel_status) {
+            rel_status.style.borderColor = "green";
+        }
+    }
 }
