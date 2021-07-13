@@ -99,6 +99,7 @@ class Relay:
         self.last_message = kwargs.get('first_message', "No Input")
         self.set_status(self.status)
         self.auto_default = self.auto
+        self.input_cache = []
 
 
 class Brain:
@@ -238,7 +239,9 @@ class STB:
         # Relay codes should be key parameter
         relay = [r for r in self.relays if r.code == relay_code][0]
 
+        relay.set_riddle_status("override")
         print(relay.lock_status)
+
         if relay.lock_status is relay.status:
             print("cannot override")
             return
@@ -247,7 +250,6 @@ class STB:
         print("setting relay {} to status {}".format(relay_code, status))
         self.__write_pcf(relay.index, status)
         relay.set_status(status)
-        relay.set_riddle_status("override")
 
         # stop mirroring once override
         relay.set_auto(False)
@@ -329,7 +331,8 @@ class STB:
             data.append({
                 "code": rel.code,
                 "riddle_status": rel.riddle_status,
-                "last_message": rel.last_message
+                "last_message": rel.last_message,
+                "lock_status": rel.lock_status
             })
         return data
 
@@ -403,6 +406,9 @@ class STB:
                 else:
                     msg = msg.lower()
                     if match('!reset', msg) is not None:
+                        relay.input_cache.insert(0, relay.last_message)
+                        # limiting the size, we don't need 20 wrong answers
+                        relay.input_cache = relay.input_cache[:5]
                         relay.last_message = relay.first_message
                     relay.riddle_status = msg[1:]
         return lines
